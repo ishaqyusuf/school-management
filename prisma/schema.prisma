@@ -1,0 +1,104 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Students {
+  id           Int            @unique @default(autoincrement())
+  parentId     Int?
+  firstName    String
+  lastName     String?
+  createdAt    DateTime?      @db.Timestamp(0)
+  updatedAt    DateTime?      @db.Timestamp(0)
+  StudentTerms StudentTerms[]
+  Parent       Parents?       @relation(fields: [parentId], references: [id])
+}
+
+model Parents {
+  id        Int        @unique @default(autoincrement())
+  firstName String
+  lastName  String?
+  createdAt DateTime?  @db.Timestamp(0)
+  updatedAt DateTime?  @db.Timestamp(0)
+  Children  Students[]
+}
+
+model AcademicYears {
+  id        Int             @unique @default(autoincrement())
+  title     String
+  createdAt DateTime?       @db.Timestamp(0)
+  updatedAt DateTime?       @db.Timestamp(0)
+  Terms     AcademicTerms[]
+}
+
+model AcademicTerms {
+  id             Int            @unique @default(autoincrement())
+  title          String //1st term 2023/2024
+  academicYearId Int
+  createdAt      DateTime?      @db.Timestamp(0)
+  updatedAt      DateTime?      @db.Timestamp(0)
+  AcademicYear   AcademicYears  @relation(fields: [academicYearId], references: [id])
+  StudentTerms   StudentTerms[]
+}
+
+model Classes {
+  id           Int            @unique @default(autoincrement())
+  title        String
+  createdAt    DateTime?      @db.Timestamp(0)
+  updatedAt    DateTime?      @db.Timestamp(0)
+  StudentTerms StudentTerms[]
+}
+
+model StudentTerms {
+  id        Int           @unique @default(autoincrement())
+  studentId Int
+  termId    Int
+  classId   Int
+  createdAt DateTime?     @db.Timestamp(0)
+  updatedAt DateTime?     @db.Timestamp(0)
+  Fees      Fees[]
+  Term      AcademicTerms @relation(fields: [termId], references: [id])
+  Student   Students      @relation(fields: [studentId], references: [id])
+  Class     Classes       @relation(fields: [classId], references: [id])
+}
+
+model Wallets {
+  id        Int       @unique @default(autoincrement())
+  balance   Float?
+  createdAt DateTime? @db.Timestamp(0)
+  updatedAt DateTime? @db.Timestamp(0)
+}
+
+model Transactions {
+  id        Int       @unique @default(autoincrement())
+  amount    Float?
+  type      String //debit,credit
+  usersId   Int?
+  createdAt DateTime? @db.Timestamp(0)
+  updatedAt DateTime? @db.Timestamp(0)
+  User      Users?    @relation(fields: [usersId], references: [id])
+}
+
+model Users {
+  id Int @unique @default(autoincrement())
+
+  Transactions Transactions[]
+  createdAt    DateTime?      @db.Timestamp(0)
+  updatedAt    DateTime?      @db.Timestamp(0)
+}
+
+model Fees {
+  id            Int          @unique @default(autoincrement())
+  amount        Float?
+  createdAt     DateTime?    @db.Timestamp(0)
+  updatedAt     DateTime?    @db.Timestamp(0)
+  studentTermId Int
+  StudentTerm   StudentTerms @relation(fields: [studentTermId], references: [id])
+}
