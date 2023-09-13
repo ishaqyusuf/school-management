@@ -17,6 +17,21 @@ This is an open source school management system built with everything new in Nex
 <!-- - **Payments infrastructure:** [Stripe](https://stripe.com) -->
 
 
+<!-- ## Features to be implemented
+
+- [x] Authentication with **Clerk**
+- [x] File uploads with **uploadthing**
+- [x] Newsletter subscription with **React Email** and **Resend**
+- [x] Blog using **MDX** and **Contentlayer**
+- [x] ORM using **Drizzle ORM**
+- [x] Database on **PlanetScale**
+- [x] Validation with **Zod**
+- [x] Storefront with products, categories, and subcategories
+- [x] Seller and customer workflows
+- [x] User subscriptions with **Stripe**
+- [ ] Checkout with **Stripe Checkout**
+- [ ] Admin dashboard with stores, products, orders, subscriptions, and payments -->
+
 First, run the development server:
 
 ```bash
