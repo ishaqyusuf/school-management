@@ -13,6 +13,7 @@ datasource db {
 model Students {
   id                Int                 @unique @default(autoincrement())
   parentId          Int?
+  slug              String
   firstName         String
   lastName          String?
   meta              Json?               @db.Json
@@ -20,6 +21,7 @@ model Students {
   updatedAt         DateTime?           @db.Timestamp(0)
   StudentTermSheets StudentTermSheets[]
   Parent            Parents?            @relation(fields: [parentId], references: [id])
+  Results           AssessmentResults[]
 }
 
 model Parents {
@@ -33,14 +35,15 @@ model Parents {
 }
 
 model AcademicYears {
-  id        Int             @unique @default(autoincrement())
-  slug      String          @unique
-  title     String // 1444/1445
-  meta      Json?           @db.Json
-  createdAt DateTime?       @db.Timestamp(0)
-  updatedAt DateTime?       @db.Timestamp(0)
-  Terms     AcademicTerms[]
-  ClassRoom ClassRoom[]
+  id           Int             @unique @default(autoincrement())
+  slug         String          @unique
+  title        String // 1444/1445
+  meta         Json?           @db.Json
+  createdAt    DateTime?       @db.Timestamp(0)
+  updatedAt    DateTime?       @db.Timestamp(0)
+  Terms        AcademicTerms[]
+  ClassRoom    ClassRoom[]
+  Transactions Transactions[]
 }
 
 model AcademicTerms {
@@ -53,31 +56,83 @@ model AcademicTerms {
   updatedAt         DateTime?           @db.Timestamp(0)
   AcademicYear      AcademicYears       @relation(fields: [academicYearId], references: [id])
   StudentTermSheets StudentTermSheets[]
+  Subjects          Subjects[]
+  Results           AssessmentResults[]
+  Transactions      Transactions[]
 }
 
 model ClassRoom {
   id                Int                 @unique @default(autoincrement())
   title             String
-  academicYearsId   Int?
+  slug              String
+  academicYearsId   Int
   meta              Json?               @db.Json
   createdAt         DateTime?           @db.Timestamp(0)
   updatedAt         DateTime?           @db.Timestamp(0)
   StudentTermSheets StudentTermSheets[]
-  AcademicYears     AcademicYears?      @relation(fields: [academicYearsId], references: [id])
+  AcademicYear      AcademicYears       @relation(fields: [academicYearsId], references: [id])
+  Assessments       Assessments[]
+  Subjects          Subjects[]
+}
+
+model Subjects {
+  id              Int                 @unique @default(autoincrement())
+  academicTermsId Int
+  title           String
+  slug            String
+  classRoomId     Int
+  meta            Json?               @db.Json
+  createdAt       DateTime?           @db.Timestamp(0)
+  updatedAt       DateTime?           @db.Timestamp(0)
+  ClassRoom       ClassRoom           @relation(fields: [classRoomId], references: [id])
+  AcademicTerm    AcademicTerms       @relation(fields: [academicTermsId], references: [id])
+  Assessments     Assessments[]
+  Results         AssessmentResults[]
+}
+
+model Assessments {
+  id          Int                 @unique @default(autoincrement())
+  title       String //exam, test etc.
+  slug        String //subject-title
+  classRoomId Int
+  subjectsId  Int
+  obtainable  Int
+  meta        Json?               @db.Json
+  createdAt   DateTime?           @db.Timestamp(0)
+  updatedAt   DateTime?           @db.Timestamp(0)
+  ClassRoom   ClassRoom           @relation(fields: [classRoomId], references: [id])
+  Subject     Subjects            @relation(fields: [subjectsId], references: [id])
+  Results     AssessmentResults[]
+}
+
+model AssessmentResults {
+  id                  Int               @unique @default(autoincrement())
+  assessmentsId       Int
+  subjectsId          Int
+  studentsId          Int
+  academicTermsId     Int
+  studentTermSheetsId Int
+  Assessment          Assessments       @relation(fields: [assessmentsId], references: [id])
+  Subject             Subjects          @relation(fields: [subjectsId], references: [id])
+  Student             Students          @relation(fields: [studentsId], references: [id])
+  AcademicTerm        AcademicTerms     @relation(fields: [academicTermsId], references: [id])
+  StudentTermSheet    StudentTermSheets @relation(fields: [studentTermSheetsId], references: [id])
 }
 
 model StudentTermSheets {
-  id        Int                @unique @default(autoincrement())
+  id        Int                 @unique @default(autoincrement())
   studentId Int
+  slug      String
   termId    Int
   classId   Int
-  meta      Json?              @db.Json
-  createdAt DateTime?          @db.Timestamp(0)
-  updatedAt DateTime?          @db.Timestamp(0)
+  meta      Json?               @db.Json
+  createdAt DateTime?           @db.Timestamp(0)
+  updatedAt DateTime?           @db.Timestamp(0)
   Fees      SchoolFeePayment[]
-  Term      AcademicTerms      @relation(fields: [termId], references: [id])
-  Student   Students           @relation(fields: [studentId], references: [id])
-  ClassRoom ClassRoom          @relation(fields: [classId], references: [id])
+  Term      AcademicTerms       @relation(fields: [termId], references: [id])
+  Student   Students            @relation(fields: [studentId], references: [id])
+  ClassRoom ClassRoom           @relation(fields: [classId], references: [id])
+  Results   AssessmentResults[]
 }
 
 model Wallets {
@@ -89,14 +144,18 @@ model Wallets {
 }
 
 model Transactions {
-  id        Int       @unique @default(autoincrement())
-  amount    Float?
-  type      String //debit,credit
-  usersId   Int?
-  meta      Json?     @db.Json
-  createdAt DateTime? @db.Timestamp(0)
-  updatedAt DateTime? @db.Timestamp(0)
-  User      Users?    @relation(fields: [usersId], references: [id])
+  id              Int           @unique @default(autoincrement())
+  academicTermsId Int
+  academicYearsId Int
+  amount          Float?
+  type            String //debit,credit
+  usersId         Int
+  meta            Json?         @db.Json
+  createdAt       DateTime?     @db.Timestamp(0)
+  updatedAt       DateTime?     @db.Timestamp(0)
+  User            Users         @relation(fields: [usersId], references: [id])
+  AcademicYear    AcademicYears @relation(fields: [academicYearsId], references: [id])
+  AcademicTerm    AcademicTerms @relation(fields: [academicTermsId], references: [id])
 }
 
 model Users {
@@ -111,10 +170,10 @@ model Users {
 }
 
 model SchoolFeePayment {
-  id                Int               @unique @default(autoincrement())
-  amount            Float?
-  createdAt         DateTime?         @db.Timestamp(0)
-  updatedAt         DateTime?         @db.Timestamp(0)
-  studentTermId     Int
-  StudentTermSheets StudentTermSheets @relation(fields: [studentTermId], references: [id])
+  id               Int               @unique @default(autoincrement())
+  amount           Float?
+  createdAt        DateTime?         @db.Timestamp(0)
+  updatedAt        DateTime?         @db.Timestamp(0)
+  studentTermId    Int
+  StudentTermSheet StudentTermSheets @relation(fields: [studentTermId], references: [id])
 }
