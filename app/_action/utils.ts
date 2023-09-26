@@ -15,16 +15,16 @@ export async function userId() {
 export async function hashPassword(pwrd) {
   return await bcrypt.hash(pwrd, 10);
 }
-export async function slugModel(value, model, c = 0) {
+export async function slugModel(value, model?, c = 0) {
   let slug = slugify([value, c > 0 ? c : null].filter(Boolean).join(" "));
-
-  let count = await model.count({
-    where: {
-      slug,
-    },
-  });
-  if (count > 0) return await slugModel(value, model, c + 1);
-
+  if (model) {
+    let count = await model.count({
+      where: {
+        slug,
+      },
+    });
+    if (count > 0) return await slugModel(value, model, c + 1);
+  }
   return slug;
 }
 export async function queryFilter(input) {
