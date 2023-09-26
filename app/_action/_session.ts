@@ -2,13 +2,15 @@
 
 import { prisma } from "@/db";
 import { slugModel } from "./utils";
+import { AcademicYears } from "@prisma/client";
 
-export async function _createAcademicSession(data) {
+export async function _createAcademicSession(data: AcademicYears) {
   data.createdAt = data.updatedAt = new Date();
   data.slug = await slugModel(data.title);
-  await prisma.academicYears.create({
+  const session = await prisma.academicYears.create({
     data: {
-      ...data,
+      ...(data as any),
     },
   });
+  return session;
 }
