@@ -5,6 +5,9 @@ import { twMerge } from "tailwind-merge"
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
+export function sluggify(...values) {
+  return sluggify(values.join(" "));
+}
 export function undot(items) {
   if (Array.isArray(items)) {
     return items;

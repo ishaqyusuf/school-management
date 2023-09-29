@@ -4,7 +4,7 @@ import { Prisma, PrismaClient,  Users } from "@prisma/client";
 import type { DefaultSession, NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt"; 
-import { loginAction } from "@/app/_actions/auth/login";
+ 
 
 const prisma = new PrismaClient();
 declare module "next-auth" {
@@ -77,8 +77,9 @@ export const authOptions: NextAuthOptions = {
         {
           return null;
         } 
-        const login = await loginAction(credentials);
-        return login
+        return null
+        // const login = await loginAction(credentials);
+        // return login
       },
     }),
   ],

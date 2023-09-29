@@ -13,7 +13,7 @@ export async function _createAcademicTerm(sessionSlug, data: AcademicTerms) {
   data.slug = await slugModel(`${sessionSlug} ${data.title}`);
   data.createdAt = new Date();
   data.updatedAt = new Date();
-  await prisma.academicTerms.create({
+  return await prisma.academicTerms.create({
     data: data as any,
   });
 }

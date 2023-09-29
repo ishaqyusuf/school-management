@@ -15,9 +15,7 @@ export async function userId() {
 export async function hashPassword(pwrd) {
   return await bcrypt.hash(pwrd, 10);
 }
-export function sluggify(...values) {
-  return sluggify(values.join(" "));
-}
+
 export async function slugModel(value, model?, c = 0) {
   let slug = slugify([value, c > 0 ? c : null].filter(Boolean).join(" "));
   if (model) {
