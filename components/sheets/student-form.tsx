@@ -8,6 +8,7 @@ import Btn from "../shared/btn";
 import { useTransition } from "react";
 import { _createStudent, _updateStudent } from "@/app/_action/_student";
 import { ClassRoom } from "@prisma/client";
+import { useParams } from "next/navigation";
 
 interface Props {
   classRooms: ClassRoom[];
@@ -17,10 +18,13 @@ export default function StudentForm({ classRooms }: Props) {
     defaultValues: {},
   });
   const [saving, startTransition] = useTransition();
+  const p = useParams();
   async function save() {
     startTransition(async () => {
       const formData = form.getValues();
-      if (formData.termId) await _updateStudent(formData);
+      console.log(formData);
+      formData.termId = Number(p?.termSlug);
+      if (formData.id) await _updateStudent(formData);
       else await _createStudent(formData);
     });
   }
@@ -32,7 +36,13 @@ export default function StudentForm({ classRooms }: Props) {
       Content={({ data }) => (
         <div className="min-h-[75vh]">
           <div className="grid gap-4">
-            <AutoComplete label="اسم الطالب" rtl form={form} formKey={"name"} />
+            <AutoComplete
+              label="اسم الطالب"
+              rtl
+              form={form}
+              formKey={"name"}
+              allowCreate
+            />
             <AutoComplete
               label="فصل"
               rtl
@@ -45,12 +55,14 @@ export default function StudentForm({ classRooms }: Props) {
             <AutoComplete
               label="اسم الوالد"
               rtl
+              allowCreate
               form={form}
               formKey={"parentName"}
             />
             <AutoComplete
               label="رقم هاتف الوالد"
               rtl
+              allowCreate
               form={form}
               formKey={"phoneNo"}
             />

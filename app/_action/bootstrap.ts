@@ -27,11 +27,13 @@ export async function _bootstrap() {
   } as any);
   //create classRooms
   const classes = await _createClassRooms(session.id, [
-    `الأول التمهيدى ا`,
-    `الأول التمهيدى ب`,
-    `الأول التمهيدى ج`,
+    `الأول التمهيدي`,
+    `الأول التمهيدي ب`,
+    `الأول التمهيدي ج`,
     `الثاني التمهيدي`,
     `الأول الإبتدائي`,
+    `الثاني الإبتدائي`,
+    `الأول الإعدادي`,
   ]);
   return { session, classes, term };
   // create students and register them to classroom
