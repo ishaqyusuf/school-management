@@ -18,10 +18,15 @@ export default async function StudentsPage({ searchParams, params }) {
       ClassRoom: true,
     },
   });
+  const classRooms = await prisma.classRoom.findMany({
+    where: {
+      academicYearsId: +params.sessionsSlug,
+    },
+  });
   return (
     <div className="">
       <StudentListShell />
-      <StudentForm />
+      <StudentForm classRooms={classRooms} />
     </div>
   );
 }
