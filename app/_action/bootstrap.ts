@@ -5,9 +5,13 @@ import { _createClassRooms } from "./_class-room";
 import { _createAcademicSession } from "./_session";
 import { _createAcademicTerm } from "./_term";
 import dayjs from "dayjs";
+import { prisma } from "@/db";
 
 export async function _bootstrap() {
   // create session:
+  await prisma.classRoom.deleteMany({});
+  await prisma.academicTerms.deleteMany({});
+  await prisma.academicYears.deleteMany({});
   const startedAt = dayjs()
     .set("month", 7)
     .set("D", 26);
@@ -17,12 +21,12 @@ export async function _bootstrap() {
   } as any);
   //create term:
 
-  const term = await _createAcademicTerm(session.slug, {
+  const term = await _createAcademicTerm(session.id, {
     title: `الفترة الأولى`,
     startedAt: startedAt.toISOString(),
   } as any);
   //create classRooms
-  const classes = await _createClassRooms(session.slug, [
+  const classes = await _createClassRooms(session.id, [
     `الأول التمهيدى ا`,
     `الأول التمهيدى ب`,
     `الأول التمهيدى ج`,

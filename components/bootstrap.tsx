@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { toast } from "sonner";
 
 export default function Boostrap({}) {
+  return <></>;
   async function _init() {
     console.log(await _bootstrap());
     toast.success("Bootstraped!");

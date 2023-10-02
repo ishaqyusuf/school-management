@@ -4,10 +4,10 @@ import { prisma } from "@/db";
 import { slugModel } from "./utils";
 import { sluggify } from "@/lib/utils";
 
-export async function _createClassRooms(sessionSlug, classes: string[]) {
+export async function _createClassRooms(sessionId, classes: string[]) {
   return await prisma.academicYears.update({
     where: {
-      slug: sessionSlug,
+      id: sessionId,
     },
     data: {
       ClassRooms: {
@@ -16,7 +16,6 @@ export async function _createClassRooms(sessionSlug, classes: string[]) {
             title,
             createdAt: new Date(),
             updatedAt: new Date(),
-            slug: sluggify(sessionSlug, title),
           })),
         },
       },

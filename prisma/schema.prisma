@@ -13,9 +13,7 @@ datasource db {
 model Students {
   id                Int                 @unique @default(autoincrement())
   parentId          Int?
-  slug              String
-  firstName         String
-  lastName          String?
+  name              String
   meta              Json?               @db.Json
   createdAt         DateTime?           @db.Timestamp(0)
   updatedAt         DateTime?           @db.Timestamp(0)
@@ -26,8 +24,7 @@ model Students {
 
 model Parents {
   id        Int        @unique @default(autoincrement())
-  firstName String
-  lastName  String?
+  name      String
   meta      Json?      @db.Json
   createdAt DateTime?  @db.Timestamp(0)
   updatedAt DateTime?  @db.Timestamp(0)
@@ -36,7 +33,6 @@ model Parents {
 
 model AcademicYears {
   id           Int             @unique @default(autoincrement())
-  slug         String          @unique
   title        String // 1444/1445
   meta         Json?           @db.Json
   createdAt    DateTime?       @db.Timestamp(0)
@@ -48,7 +44,6 @@ model AcademicYears {
 
 model AcademicTerms {
   id                Int                 @unique @default(autoincrement())
-  slug              String              @unique
   title             String //1st term 2023/2024
   academicYearId    Int
   meta              Json?               @db.Json
@@ -67,7 +62,6 @@ model AcademicTerms {
 model ClassRoom {
   id                Int                 @unique @default(autoincrement())
   title             String
-  slug              String
   academicYearsId   Int
   meta              Json?               @db.Json
   createdAt         DateTime?           @db.Timestamp(0)
@@ -82,7 +76,6 @@ model Subjects {
   id              Int                 @unique @default(autoincrement())
   academicTermsId Int
   title           String
-  slug            String
   classRoomId     Int
   meta            Json?               @db.Json
   createdAt       DateTime?           @db.Timestamp(0)
@@ -95,8 +88,7 @@ model Subjects {
 
 model Assessments {
   id          Int                 @unique @default(autoincrement())
-  title       String //exam, test etc.
-  slug        String //subject-title
+  title       String //exam, test etc. 
   classRoomId Int
   subjectsId  Int
   obtainable  Int
@@ -123,19 +115,19 @@ model AssessmentResults {
 }
 
 model StudentTermSheets {
-  id        Int                 @unique @default(autoincrement())
-  studentId Int
-  slug      String
-  termId    Int
-  classId   Int
-  meta      Json?               @db.Json
-  createdAt DateTime?           @db.Timestamp(0)
-  updatedAt DateTime?           @db.Timestamp(0)
-  Fees      SchoolFeePayment[]
-  Term      AcademicTerms       @relation(fields: [termId], references: [id])
-  Student   Students            @relation(fields: [studentId], references: [id])
-  ClassRoom ClassRoom           @relation(fields: [classId], references: [id])
-  Results   AssessmentResults[]
+  id          Int                 @unique @default(autoincrement())
+  studentId   Int
+  termId      Int
+  classId     Int
+  freeStudent Boolean?
+  meta        Json?               @db.Json
+  createdAt   DateTime?           @db.Timestamp(0)
+  updatedAt   DateTime?           @db.Timestamp(0)
+  Fees        SchoolFeePayment[]
+  Term        AcademicTerms       @relation(fields: [termId], references: [id])
+  Student     Students            @relation(fields: [studentId], references: [id])
+  ClassRoom   ClassRoom           @relation(fields: [classId], references: [id])
+  Results     AssessmentResults[]
 }
 
 model Wallets {
