@@ -1,5 +1,4 @@
 import { prisma } from "@/db";
-import Image from "next/image";
 import { redirect } from "next/navigation";
 import { _bootstrap } from "./_action/bootstrap";
 

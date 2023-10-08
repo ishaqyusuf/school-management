@@ -2,7 +2,7 @@ import MobileList from "@/components/shared/mobile-list";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/db";
 import { Plus } from "lucide-react";
-import StudentForm from "@/components/sheets/student-form";
+import StudentForm from "@/components/sheets/student-form-sheet";
 import { openModal } from "@/lib/modal";
 import StudentListShell from "@/components/shell/student-list-shell";
 import StudentOptionSheet from "@/components/sheets/student-option-sheet";
@@ -31,16 +31,12 @@ export default async function StudentsPage({ searchParams, params }) {
       termSheet,
     };
   });
-  const classRooms = await prisma.classRoom.findMany({
-    where: {
-      academicYearsId: +params.sessionSlug,
-    },
-  });
+
   // console.log(classRooms);
   return (
     <div className="">
-      <StudentListShell list={s as any} />
-      <StudentForm classRooms={classRooms} />
+      <StudentListShell params={params} list={s as any} />
+      {/* <StudentForm classRooms={classRooms} /> */}
       <StudentOptionSheet />
     </div>
   );

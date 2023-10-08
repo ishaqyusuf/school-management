@@ -20,10 +20,15 @@ export default function DashboardCard({
   return (
     <LinkNode
       href={link}
-      className={cn(className, "rounded-lg p-4 shadow-xl border shadow-accent")}
+      className={cn(
+        className,
+        "rounded-lg p-4 shadow-xl border border-foreground flex flex-row-reverse justify-between items-end shadow-accent"
+      )}
     >
-      <p className="text-right text-primary font-bold text-2xl">{title}</p>
-      <div className="text-right text-muted-foreground">{subtitle}</div>
+      <div className="">
+        <p className="text-right text-primary font-bold text-2xl">{title}</p>
+        <div className="text-right text-muted-foreground">{subtitle}</div>
+      </div>
       <div className="text-4xl font-bold">{value}</div>
     </LinkNode>
   );

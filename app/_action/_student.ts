@@ -10,7 +10,7 @@ export async function _createStudent(data: StudentForm) {
   const student = await prisma.students.create({
     data: {
       name: data.name,
-
+      sex: data.sex,
       StudentTermSheets: {
         create: data.classId
           ? {

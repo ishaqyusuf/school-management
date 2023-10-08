@@ -114,10 +114,13 @@ export function toEnglish(num)
 
   return keyValuePairs;
 }
-export function termLink({sessionSlug,termSlug},link)
+export function termLink(params,link)
 {
-
-  return `/${sessionSlug}/${termSlug}/${link}`
+  if(!params)
+  return ''
+  const {sessionSlug,termSlug}= params
+  
+  return `/session/${sessionSlug}/term/${termSlug}/${link}`
 }export function labelValue(label,value?)
 {
   return {label,value}

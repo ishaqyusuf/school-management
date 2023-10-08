@@ -6,6 +6,10 @@ import { formatDate } from "@/lib/use-day";
 import { deepCopy } from "@/lib/deep-copy";
 
 export interface ISlicer {
+  params: {
+    sessionSlug;
+    termSlug;
+  };
   modal: {
     name: ModalName;
     data: any;

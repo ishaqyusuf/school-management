@@ -4,12 +4,16 @@ import { Plus } from "lucide-react";
 import { Button } from "../ui/button";
 import { openModal } from "@/lib/modal";
 import { IStudent } from "@/types/types";
-import { toArabic } from "@/lib/utils";
+import { termLink, toArabic } from "@/lib/utils";
+import Link from "next/link";
+import { useAppSelector } from "@/store";
 
 interface Props {
   list: IStudent[];
+  params;
 }
-export default function StudentListShell({ list }: Props) {
+export default function StudentListShell({ list, params }: Props) {
+  const _params = useAppSelector((s) => s.slicers?.params);
   return (
     <div className="">
       <ul>
@@ -37,13 +41,10 @@ export default function StudentListShell({ list }: Props) {
         ))}
       </ul>
       <div className="fixed bottom-0 right-0 m-4">
-        <Button
-          onClick={() => {
-            openModal("studentForm");
-          }}
-          className="w-12 h-12 p-0 rounded-full"
-        >
-          <Plus />
+        <Button asChild className="w-12 h-12 p-0 rounded-full">
+          <Link href={termLink(_params, "student/form/-1")}>
+            <Plus />
+          </Link>
         </Button>
       </div>
     </div>

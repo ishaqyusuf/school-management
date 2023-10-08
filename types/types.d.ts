@@ -7,6 +7,7 @@ export interface StudentForm {
   termId?;
   id?;
   classId?;
+  sex;
   termSheetId?;
 }
 export interface IStudentTermSheet extends StudentTermSheets {
