@@ -4,7 +4,7 @@ import { termLink, toArabic, toEnglish } from "@/lib/utils";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-export const meta: Metadata = {
+export const metadata: Metadata = {
   title: "",
 };
 
