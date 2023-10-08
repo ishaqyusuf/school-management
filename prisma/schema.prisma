@@ -14,6 +14,7 @@ model Students {
   id                Int                 @unique @default(autoincrement())
   parentId          Int?
   name              String
+  sex               String
   meta              Json?               @db.Json
   createdAt         DateTime?           @db.Timestamp(0)
   updatedAt         DateTime?           @db.Timestamp(0)
@@ -120,6 +121,7 @@ model StudentTermSheets {
   termId      Int
   classId     Int
   freeStudent Boolean?
+  feePaid     Boolean?
   meta        Json?               @db.Json
   createdAt   DateTime?           @db.Timestamp(0)
   updatedAt   DateTime?           @db.Timestamp(0)

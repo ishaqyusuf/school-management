@@ -118,4 +118,7 @@ export function termLink({sessionSlug,termSlug},link)
 {
 
   return `/${sessionSlug}/${termSlug}/${link}`
+}export function labelValue(label,value?)
+{
+  return {label,value}
 }

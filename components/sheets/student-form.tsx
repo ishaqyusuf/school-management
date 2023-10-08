@@ -9,6 +9,7 @@ import { useTransition } from "react";
 import { _createStudent, _updateStudent } from "@/app/_action/_student";
 import { ClassRoom } from "@prisma/client";
 import { useParams } from "next/navigation";
+import { closeModal } from "@/lib/modal";
 
 interface Props {
   classRooms: ClassRoom[];
@@ -26,6 +27,7 @@ export default function StudentForm({ classRooms }: Props) {
       formData.termId = Number(p?.termSlug);
       if (formData.id) await _updateStudent(formData);
       else await _createStudent(formData);
+      closeModal();
     });
   }
   return (

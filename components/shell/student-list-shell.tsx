@@ -14,7 +14,13 @@ export default function StudentListShell({ list }: Props) {
     <div className="">
       <ul>
         {list.map((student, i) => (
-          <li key={i} className="text-right p-2">
+          <li
+            key={i}
+            className="text-right border-b p-2"
+            onClick={() => {
+              openModal("studentOptions", student);
+            }}
+          >
             <div className="inline-flex flex-row-reverse">
               <div className="w-6">
                 {"."}

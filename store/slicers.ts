@@ -16,7 +16,7 @@ export interface ISlicer {
   };
 }
 
-export type ModalName = "studentForm" | undefined;
+export type ModalName = "studentForm" | "studentOptions" | undefined;
 const initialState: ISlicer = ({
   modal: {
     name: undefined,

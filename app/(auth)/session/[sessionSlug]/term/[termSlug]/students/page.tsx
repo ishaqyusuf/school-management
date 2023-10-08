@@ -5,6 +5,7 @@ import { Plus } from "lucide-react";
 import StudentForm from "@/components/sheets/student-form";
 import { openModal } from "@/lib/modal";
 import StudentListShell from "@/components/shell/student-list-shell";
+import StudentOptionSheet from "@/components/sheets/student-option-sheet";
 export default async function StudentsPage({ searchParams, params }) {
   const students = await prisma.students.findMany({
     where: {},
@@ -18,8 +19,11 @@ export default async function StudentsPage({ searchParams, params }) {
         },
       },
     },
+    orderBy: {
+      name: "asc",
+    },
   });
-  console.log(students[0]?.StudentTermSheets[0]?.ClassRoom);
+
   let s = students.map((_s) => {
     const termSheet = _s.StudentTermSheets?.[0];
     return {
@@ -27,18 +31,6 @@ export default async function StudentsPage({ searchParams, params }) {
       termSheet,
     };
   });
-  // const students = await prisma.studentTermSheets.findMany({
-  //   where: {
-  //     Term: {
-  //       id: +params.termSlug,
-  //     },
-  //   },
-  //   include: {
-  //     Student: true,
-  //     Fees: true,
-  //     ClassRoom: true,
-  //   },
-  // });
   const classRooms = await prisma.classRoom.findMany({
     where: {
       academicYearsId: +params.sessionSlug,
@@ -49,6 +41,7 @@ export default async function StudentsPage({ searchParams, params }) {
     <div className="">
       <StudentListShell list={s as any} />
       <StudentForm classRooms={classRooms} />
+      <StudentOptionSheet />
     </div>
   );
 }

@@ -19,6 +19,6 @@ export default async function Home() {
     },
   });
   console.log(term);
-  redirect(`/${term?.AcademicYear.id}/${term?.id}`);
+  redirect(`/session/${term?.AcademicYear.id}/term/${term?.id}`);
   return <></>;
 }

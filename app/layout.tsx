@@ -1,6 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Noto_Sans_Arabic } from 'next/font/google'
  
 import { SonnerToaster } from '@/components/ui/sonner-toaster';
 import { Analytics } from "@vercel/analytics/react";
@@ -8,7 +8,9 @@ import { TailwindIndicator } from "@/components/tailwind-indicator";
 import AppProvider from '@/components/app-provider';
 import Boostrap from '@/components/bootstrap';
  
-const inter = Inter({ subsets: ['latin'] })
+const inter = Noto_Sans_Arabic({ 
+  subsets: ['arabic']
+ })
 
 export const metadata: Metadata = {
   title: 'Create Next App',
