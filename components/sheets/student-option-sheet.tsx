@@ -24,6 +24,7 @@ export default function StudentOptionSheet() {
     labelValue("تعيين الفصل"),
     labelValue("حذف الطالب"),
   ];
+
   return (
     <BaseSheet<IStudent>
       side="bottom"
