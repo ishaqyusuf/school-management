@@ -6,7 +6,8 @@ import { useEffect } from "react";
 
 export default function Params({ params }) {
   useEffect(() => {
-    dispatchSlice("params", params);
+    // console.log(params);
+    // dispatchSlice("params", params);
   }, [params]);
   return <></>;
 }

@@ -20,7 +20,11 @@ export interface ISlicer {
   };
 }
 
-export type ModalName = "studentForm" | "studentOptions" | undefined;
+export type ModalName =
+  | "studentForm"
+  | "studentOptions"
+  | "applyPayment"
+  | undefined;
 const initialState: ISlicer = ({
   modal: {
     name: undefined,
@@ -41,6 +45,9 @@ const headerNavSlice = createSlice({
       const d = transformObject(data);
       state[key] = d;
     },
+    hello(state, action) {
+      console.log(">>>>>>");
+    },
   },
 });
 function transformObject(data) {
@@ -58,7 +65,7 @@ function transformObject(data) {
   return data;
 }
 export default headerNavSlice.reducer;
-export const { updateSlice } = headerNavSlice.actions;
+export const { updateSlice, hello: helloSlice } = headerNavSlice.actions;
 export function dispatchSlice(key: keyof ISlicer, data: any = null) {
   // if (data) data = deepCopy(data);
   store.dispatch(

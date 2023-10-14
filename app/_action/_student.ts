@@ -2,7 +2,6 @@
 
 import { prisma } from "@/db";
 import { StudentForm } from "@/types/types";
-import { slugModel } from "./utils";
 import { revalidatePath } from "next/cache";
 
 export async function _updateStudent(data: StudentForm) {}
@@ -11,16 +10,22 @@ export async function _createStudent(data: StudentForm) {
     data: {
       name: data.name,
       sex: data.sex,
+      meta: {
+        ...data.meta,
+      },
       StudentTermSheets: {
         create: data.classId
           ? {
               termId: +data.termId,
               classId: +data.classId,
+              payable: +data.meta.schoolFee || 3000,
               createdAt: new Date(),
               updatedAt: new Date(),
             }
           : undefined,
       },
+      createdAt: new Date(),
+      updatedAt: new Date(),
     },
   });
   revalidatePath("/[sessionSlug]/[termSlug]/students", "page");

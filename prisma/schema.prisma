@@ -34,31 +34,31 @@ model Parents {
 }
 
 model AcademicYears {
-  id           Int             @unique @default(autoincrement())
+  id           Int                  @unique @default(autoincrement())
   title        String // 1444/1445
-  meta         Json?           @db.Json
-  createdAt    DateTime?       @db.Timestamp(0)
-  updatedAt    DateTime?       @db.Timestamp(0)
+  meta         Json?                @db.Json
+  createdAt    DateTime?            @db.Timestamp(0)
+  updatedAt    DateTime?            @db.Timestamp(0)
   Terms        AcademicTerms[]
   ClassRooms   ClassRoom[]
-  Transactions Transactions[]
+  Transactions WalletTransactions[]
 }
 
 model AcademicTerms {
-  id                Int                 @unique @default(autoincrement())
+  id                Int                  @unique @default(autoincrement())
   title             String //1st term 2023/2024
   academicYearId    Int
-  meta              Json?               @db.Json
+  meta              Json?                @db.Json
   current           Boolean?
-  startedAt         DateTime?           @db.Timestamp(0)
-  endsAt            DateTime?           @db.Timestamp(0)
-  createdAt         DateTime?           @db.Timestamp(0)
-  updatedAt         DateTime?           @db.Timestamp(0)
-  AcademicYear      AcademicYears       @relation(fields: [academicYearId], references: [id])
+  startedAt         DateTime?            @db.Timestamp(0)
+  endsAt            DateTime?            @db.Timestamp(0)
+  createdAt         DateTime?            @db.Timestamp(0)
+  updatedAt         DateTime?            @db.Timestamp(0)
+  AcademicYear      AcademicYears        @relation(fields: [academicYearId], references: [id])
   StudentTermSheets StudentTermSheets[]
   Subjects          Subjects[]
   Results           AssessmentResults[]
-  Transactions      Transactions[]
+  Transactions      WalletTransactions[]
 }
 
 model ClassRoom {
@@ -117,20 +117,20 @@ model AssessmentResults {
 }
 
 model StudentTermSheets {
-  id          Int                 @unique @default(autoincrement())
-  studentId   Int
-  termId      Int
-  classId     Int
-  freeStudent Boolean?
-  feePaid     Boolean?
-  meta        Json?               @db.Json
-  createdAt   DateTime?           @db.Timestamp(0)
-  updatedAt   DateTime?           @db.Timestamp(0)
-  Fees        SchoolFeePayment[]
-  Term        AcademicTerms       @relation(fields: [termId], references: [id])
-  Student     Students            @relation(fields: [studentId], references: [id])
-  ClassRoom   ClassRoom           @relation(fields: [classId], references: [id])
-  Results     AssessmentResults[]
+  id        Int                 @unique @default(autoincrement())
+  studentId Int
+  termId    Int
+  classId   Int
+  payable   Int?
+  owing     Int?
+  meta      Json?               @db.Json
+  createdAt DateTime?           @db.Timestamp(0)
+  updatedAt DateTime?           @db.Timestamp(0)
+  Fees      StudentPayments[]
+  Term      AcademicTerms       @relation(fields: [termId], references: [id])
+  Student   Students            @relation(fields: [studentId], references: [id])
+  ClassRoom ClassRoom           @relation(fields: [classId], references: [id])
+  Results   AssessmentResults[]
 }
 
 model Wallets {
@@ -141,37 +141,43 @@ model Wallets {
   updatedAt DateTime? @db.Timestamp(0)
 }
 
-model Transactions {
-  id              Int           @unique @default(autoincrement())
-  academicTermsId Int
-  academicYearsId Int
-  amount          Float?
-  type            String //debit,credit
-  usersId         Int
-  meta            Json?         @db.Json
-  createdAt       DateTime?     @db.Timestamp(0)
-  updatedAt       DateTime?     @db.Timestamp(0)
-  User            Users         @relation(fields: [usersId], references: [id])
-  AcademicYear    AcademicYears @relation(fields: [academicYearsId], references: [id])
-  AcademicTerm    AcademicTerms @relation(fields: [academicTermsId], references: [id])
+model WalletTransactions {
+  id                Int              @unique @default(autoincrement())
+  academicTermsId   Int
+  academicYearsId   Int
+  amount            Float?
+  type              String //debit,credit
+  usersId           Int
+  meta              Json?            @db.Json
+  createdAt         DateTime?        @db.Timestamp(0)
+  updatedAt         DateTime?        @db.Timestamp(0)
+  paymentId         Int?
+  payment           StudentPayments? @relation(fields: [studentPaymentsId], references: [id])
+  User              Users            @relation(fields: [usersId], references: [id])
+  AcademicYear      AcademicYears    @relation(fields: [academicYearsId], references: [id])
+  AcademicTerm      AcademicTerms    @relation(fields: [academicTermsId], references: [id])
+  studentPaymentsId Int?
 }
 
 model Users {
-  id           Int            @unique @default(autoincrement())
+  id           Int                  @unique @default(autoincrement())
   name         String
   role         String
   password     String
-  meta         Json?          @db.Json
-  Transactions Transactions[]
-  createdAt    DateTime?      @db.Timestamp(0)
-  updatedAt    DateTime?      @db.Timestamp(0)
+  meta         Json?                @db.Json
+  Transactions WalletTransactions[]
+  createdAt    DateTime?            @db.Timestamp(0)
+  updatedAt    DateTime?            @db.Timestamp(0)
 }
 
-model SchoolFeePayment {
-  id               Int               @unique @default(autoincrement())
+model StudentPayments {
+  id               Int                  @unique @default(autoincrement())
   amount           Float?
-  createdAt        DateTime?         @db.Timestamp(0)
-  updatedAt        DateTime?         @db.Timestamp(0)
+  paymentType      String
+  note             String?
+  createdAt        DateTime?            @db.Timestamp(0)
+  updatedAt        DateTime?            @db.Timestamp(0)
   studentTermId    Int
-  StudentTermSheet StudentTermSheets @relation(fields: [studentTermId], references: [id])
+  transactions     WalletTransactions[]
+  StudentTermSheet StudentTermSheets    @relation(fields: [studentTermId], references: [id])
 }

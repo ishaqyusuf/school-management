@@ -1,19 +1,15 @@
-import MobileList from "@/components/shared/mobile-list";
-import { Button } from "@/components/ui/button";
 import { prisma } from "@/db";
-import { Plus } from "lucide-react";
-import StudentForm from "@/components/sheets/student-form-sheet";
-import { openModal } from "@/lib/modal";
 import StudentListShell from "@/components/shell/student-list-shell";
 import StudentOptionSheet from "@/components/sheets/student-option-sheet";
+import StudentPaymentFormSheet from "@/components/sheets/student-payment-form";
 export default async function StudentsPage({ searchParams, params }) {
   const students = await prisma.students.findMany({
     where: {},
     include: {
       StudentTermSheets: {
-        where: {
-          termId: +params.termSlug,
-        },
+        // where: {
+        //   termId: +params.termSlug,
+        // },
         include: {
           ClassRoom: true,
         },
@@ -25,10 +21,16 @@ export default async function StudentsPage({ searchParams, params }) {
   });
 
   let s = students.map((_s) => {
-    const termSheet = _s.StudentTermSheets?.[0];
+    const termSheet = _s.StudentTermSheets.find(
+      (s) => s.termId == +params.termSlug
+    );
     return {
       ..._s,
       termSheet,
+      amountOwed: _s.StudentTermSheets.map((s) => s.owing || 0).reduce(
+        (a, b) => a + b,
+        0
+      ),
     };
   });
 
@@ -37,7 +39,8 @@ export default async function StudentsPage({ searchParams, params }) {
     <div className="">
       <StudentListShell params={params} list={s as any} />
       {/* <StudentForm classRooms={classRooms} /> */}
-      <StudentOptionSheet />
+      <StudentOptionSheet lng={params.lng} />
+      <StudentPaymentFormSheet lng={params.lng} />
     </div>
   );
 }

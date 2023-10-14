@@ -3,7 +3,6 @@
 import { useForm } from "react-hook-form";
 import BaseSheet from "./base-sheet";
 import { StudentForm } from "@/types/types";
-import AutoComplete from "../shared/auto-complete";
 import Btn from "../shared/btn";
 import { useTransition } from "react";
 import { _createStudent, _updateStudent } from "@/app/_action/_student";
@@ -19,7 +18,11 @@ interface Props {
 }
 export default function StudentFormSheet({ classRooms }: Props) {
   const form = useForm<StudentForm>({
-    defaultValues: {},
+    defaultValues: {
+      meta: {
+        schoolFee: 3000,
+      },
+    },
   });
   const [saving, startTransition] = useTransition();
   const p = useParams();
@@ -65,6 +68,15 @@ export default function StudentFormSheet({ classRooms }: Props) {
                 itemText={"title"}
                 form={form}
                 formKey={"classId"}
+              />
+              <SelectInput
+                label="فصل"
+                rtl
+                options={classRooms}
+                itemValue={"id"}
+                itemText={"title"}
+                form={form}
+                formKey={"meta.schoolFee"}
               />
               <FormInput
                 label="اسم الوالد"

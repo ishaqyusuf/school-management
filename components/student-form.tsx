@@ -12,12 +12,16 @@ import SelectInput from "./shared/select-input";
 import Btn from "./shared/btn";
 import { toast } from "sonner";
 import { termLink } from "@/lib/utils";
+import { useTranslation } from "@/app/i18n/client";
+ 
 
 interface Props {
   classRooms: ClassRoom[];
   params;
 }
 export default function StudentFormComponent({ classRooms, params }: Props) {
+
+  const {t} = useTranslation(params.lng)
   const form = useForm<StudentForm>({
     defaultValues: {},
   });
@@ -32,9 +36,9 @@ export default function StudentFormComponent({ classRooms, params }: Props) {
       if (formData.id) await _updateStudent(formData);
       else {
         await _createStudent(formData);
-        toast("success", {
+        toast(t('success'), {
           action: {
-            label: "Go Back",
+            label: t('go-back'),
             onClick: () => router.push(termLink(params, "students")),
           },
         });
@@ -47,23 +51,16 @@ export default function StudentFormComponent({ classRooms, params }: Props) {
       <Form {...form}>
         <div className="min-h-[75vh]">
           <div className="grid gap-4">
-            <FormInput label="اسم الطالب" rtl form={form} formKey={"name"} />
+            <FormInput label={t('student-name')} rtl form={form} formKey={"name"} />
             <SelectInput
-              label="جنس"
+              label={t("sex")}
               rtl
-              options={["ذكر", "أنثى"]}
+              options={[t('male'), t('female')]}
               form={form}
               formKey={"sex"}
             />
-            {/* <AutoComplete
-                label="جنس"
-                rtl
-                options={["ذكر", "أنثى"]}
-                form={form}
-                formKey={"sex"}
-              /> */}
             <SelectInput
-              label="فصل"
+              label={t('class')}
               rtl
               options={classRooms}
               itemValue={"id"}
@@ -72,13 +69,13 @@ export default function StudentFormComponent({ classRooms, params }: Props) {
               formKey={"classId"}
             />
             <FormInput
-              label="اسم الوالد"
+              label={t('parent-name')}
               rtl
               form={form}
               formKey={"parentName"}
             />
             <FormInput
-              label="رقم هاتف الوالد"
+              label={t('parent-phone')}
               rtl
               form={form}
               formKey={"phoneNo"}
@@ -87,7 +84,7 @@ export default function StudentFormComponent({ classRooms, params }: Props) {
           <div className="flex justify-end mt-4">
             <div>
               <Btn onClick={save} isLoading={saving}>
-                سجل
+                {t('register')}
               </Btn>
             </div>
           </div>

@@ -22,7 +22,7 @@ export default function DashboardCard({
       href={link}
       className={cn(
         className,
-        "rounded-lg p-4 shadow-xl border border-foreground flex flex-row-reverse justify-between items-end shadow-accent"
+        "rounded-lg p-4 shadow-xl border border-foreground flex justify-between items-end shadow-accent"
       )}
     >
       <div className="">

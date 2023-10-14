@@ -1,3 +1,4 @@
+import { useTranslation } from "@/app/i18n";
 import DashboardCard from "@/components/dashboard-card";
 import { prisma } from "@/db";
 import { termLink, toArabic, toEnglish } from "@/lib/utils";
@@ -31,6 +32,7 @@ export default async function HomePage({ searchParams, params }) {
     },
   });
   if (!term) redirect("/");
+  const { t } = await useTranslation(params.lng);
 
   return (
     <div className="p-4">
@@ -42,8 +44,8 @@ export default async function HomePage({ searchParams, params }) {
         <div className="col-span-2">
           <DashboardCard
             link={termLink(params, "students")}
-            title="طلاب"
-            subtitle="الطلاب المسجلين لهذه الفطرة"
+            title={t("students")}
+            subtitle={t("registered-students")}
             value={toArabic(term._count.StudentTermSheets)}
           />
         </div>
