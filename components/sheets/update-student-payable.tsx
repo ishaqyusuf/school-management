@@ -25,7 +25,7 @@ import {
   _setStudentTermPayable,
 } from "@/app/_action/_payment";
 import { Label } from "../ui/label";
-import { StudentPayments } from "@prisma/client";
+
 import { Badge } from "../ui/badge";
 
 export default function UpdateStudentPayableSheet({ lng }) {

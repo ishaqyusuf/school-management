@@ -2,12 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import BaseSheet from "./base-sheet";
-import {
-  IOwingData,
-  IStudent,
-  MakePaymentData,
-  StudentForm,
-} from "@/types/types";
+import { IOwingData, IStudent, MakePaymentData } from "@/types/types";
 import Btn from "../shared/btn";
 import { useState, useTransition } from "react";
 import { _createStudent, _updateStudent } from "@/app/_action/_student";
@@ -24,7 +19,6 @@ import {
   _makePayment,
 } from "@/app/_action/_payment";
 import { Label } from "../ui/label";
-import { StudentPayments } from "@prisma/client";
 import { Badge } from "../ui/badge";
 import { Switch } from "../ui/switch";
 
@@ -36,7 +30,8 @@ export default function StudentPaymentFormSheet({ lng }) {
   }>({
     defaultValues: {
       amount: "",
-      type: "fee",
+      type: "school-fee",
+
       updateWallet: true,
     },
   });
@@ -60,7 +55,8 @@ export default function StudentPaymentFormSheet({ lng }) {
           payment: {
             amount: _amount,
             // payable: h.owing - _amount,
-            paymentType: formData.type,
+            transaction: "credit",
+            type: formData.type,
             createdAt: new Date(),
             updatedAt: new Date(),
           },
@@ -86,9 +82,9 @@ export default function StudentPaymentFormSheet({ lng }) {
   }>({} as any);
   async function init(data) {
     const paymentInfo = await _getStudentPaymentInformation(data.id);
-    // console.log(paymentInfo);
+    console.log(paymentInfo);
     setPaymentInfo(paymentInfo as any);
-    form.reset({ amount: "", type: "fee", updateWallet: true });
+    form.reset({ amount: "", type: "school-fee", updateWallet: true });
   }
   return (
     <BaseSheet<IStudent>
@@ -110,8 +106,8 @@ export default function StudentPaymentFormSheet({ lng }) {
                 label={t("payment-type")}
                 rtl
                 options={[
-                  labelValue(t("entrance-fee"), "entrance"),
-                  labelValue(t("school-fee"), "fee"),
+                  labelValue(t("entrance-fee"), "entrance-fee"),
+                  labelValue(t("school-fee"), "school-fee"),
                 ]}
                 form={form}
                 formKey={"type"}

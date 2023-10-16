@@ -27,14 +27,15 @@ export async function _getTransactions() {
   return await prisma.walletTransactions.findMany({
     where: {},
     include: {
-      payment: {
+      // StudentTermSheets
+      // payment: {
+      //   include: {
+      StudentTermSheet: {
         include: {
-          StudentTermSheet: {
-            include: {
-              Student: true,
-            },
-          },
+          Student: true,
         },
+        // },
+        // },
       },
     },
   });

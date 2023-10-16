@@ -3,57 +3,55 @@
 import { Plus } from "lucide-react";
 import { Button } from "../ui/button";
 import { openModal } from "@/lib/modal";
-import { IStudent } from "@/types/types";
-import { termLink, toArabic } from "@/lib/utils";
+import { IStudent, IWalletTransactions } from "@/types/types";
+import { formatCurrency, sum, termLink, toArabic } from "@/lib/utils";
 import Link from "next/link";
 import { useAppSelector } from "@/store";
 import { Badge } from "../ui/badge";
+import { useTranslation } from "@/app/i18n/client";
 
 interface Props {
-  list: IStudent[];
+  list: IWalletTransactions[];
   params;
 }
-export default function StudentListShell({ list, params }: Props) {
+export default function TransactionsListShell({ list, params }: Props) {
   // const _params = useAppSelector((s) => s.slicers?.params);
+
+  const { t } = useTranslation(params.lng);
   return (
     <div className="pb-24">
       <ul>
-        {list.map((student, i) => (
+        {list.map((transaction, i) => (
           <li
             key={i}
             className="text-right border-b p-2"
             onClick={() => {
-              openModal("studentOptions", student);
+              // openModal("studentOptions", student);
             }}
           >
-            <div className="flex">
-              <div className="w-6">
+            <div className="flex items-center">
+              {/* <div className="w-6">
                 {toArabic(i + 1)}
                 {"."}
-              </div>
-              <div className="flex-1">
-                <p className="font-semibold">{student.name}</p>
+              </div> */}
+              <div className="">
+                <p className="font-semibold">
+                  {transaction?.StudentTermSheet?.Student?.name ||
+                    transaction.description}
+                </p>
+
                 <div className="flex space-x-2 items-center">
-                  {student.termSheet && (
+                  {transaction.StudentTermSheet && (
                     <p className="text-muted-foreground text-sm">
-                      {student.termSheet?.ClassRoom?.title}
+                      {t("school-fee")}
                     </p>
-                  )}
-                  <div className="flex-1"></div>
-                  {student.amountOwed > 0 ? (
-                    <Badge
-                      className="text-red-500  font-bold"
-                      variant={"secondary"}
-                    >
-                      {toArabic(student.amountOwed)}
-                    </Badge>
-                  ) : (
-                    <Badge variant={"secondary"} className="text-green-600">
-                      تم الدفع
-                    </Badge>
                   )}
                 </div>
               </div>
+              <div className="flex-1"></div>
+              <p className="font-bold text-lg">
+                {toArabic(formatCurrency.format(transaction.amount))}
+              </p>
             </div>
           </li>
         ))}

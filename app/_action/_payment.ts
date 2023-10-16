@@ -10,7 +10,6 @@ export async function _makePayment(data: {
   payments: MakePaymentData[];
   studentId;
   amount;
-  type;
   updateWallet;
 }) {
   await Promise.all(
@@ -23,42 +22,20 @@ export async function _makePayment(data: {
         },
         data: {
           owing: payable,
-          // Transactions: {
-          //   create: {
-          //     academicTermsId: termId,
-          //     academicYearsId: yearId,
-          //     description: "school-fee-payment",
-          //     userId: 1,
-          //     type: data.type,
-          //     amount: data.amount,
-          //     meta: {},
-          //     createdAt: new Date(),
-          //     updatedAt: new Date(),
-          //   },
-          // },
-          Fees: {
+          Transactions: {
             create: {
-              paymentType: payment.paymentType as string,
-              amount: payment.amount as number,
+              academicTermsId: termId,
+              academicYearsId: yearId,
+              // description: "school-fee",
+              userId: 1,
+              updateWallet: data.updateWallet,
+              type: payment.type as string,
+              transaction: "credit",
+              amount: data.amount,
+              meta: {},
               createdAt: new Date(),
               updatedAt: new Date(),
-              transactions: {
-                create: {
-                  academicTermsId: termId,
-                  academicYearsId: yearId,
-                  description: "school-fee-payment",
-                  userId: 1,
-                  type: payment.paymentType as string,
-                  amount: data.amount,
-                  meta: {},
-                  createdAt: new Date(),
-                  updatedAt: new Date(),
-                },
-              },
             },
-            // createMany: {
-            //   data: [...data.payments],
-            // },
           },
         },
       });
@@ -88,9 +65,10 @@ export async function _getStudentPaymentInformation(studentId) {
               },
             },
           },
-          Fees: {
+          Transactions: {
             select: {
-              paymentType: true,
+              type: true,
+              description: true,
               amount: true,
             },
           },
@@ -104,7 +82,7 @@ export async function _getStudentPaymentInformation(studentId) {
   const owingHistory = student?.StudentTermSheets.map((termSheet) => {
     const t: IStudentTermSheet = termSheet as any;
     const totalPaid =
-      t.Fees.filter((f) => f.paymentType == "fee")
+      t.Transactions.filter((f) => f.description == "fee")
         .map((f) => f.amount)
         .reduce((p, c) => (p || 0) + (c || 0), 0) || 0;
     // let payable = t.meta?.payable;
@@ -130,10 +108,10 @@ export async function _getStudentPaymentInformation(studentId) {
 }
 
 export async function _setStudentTermPayable(studentTermId, payable) {
-  const payments = await prisma.studentPayments.findMany({
+  const payments = await prisma.walletTransactions.findMany({
     where: {
-      studentTermId,
-      paymentType: "fee",
+      studentTermSheetsId: studentTermId,
+      description: "school-fee",
     },
   });
   const paid = sum(payments, "amount") || 0;

@@ -1,45 +1,37 @@
 import { prisma } from "@/db";
-import StudentListShell from "@/components/shell/student-list-shell";
 import StudentOptionSheet from "@/components/sheets/student-option-sheet";
 import StudentPaymentFormSheet from "@/components/sheets/student-payment-form";
 import SetStudentClassSheet from "@/components/sheets/set-student-class-sheet";
 import UpdateStudentPayableSheet from "@/components/sheets/update-student-payable";
+import TransactionsListShell from "@/components/shell/transactions-list-shell";
+import Header from "@/components/header";
+import { useTranslation } from "@/app/i18n";
 export default async function TransactionsPage({ searchParams, params }) {
-  const students = await prisma.students.findMany({
-    where: {},
+  // await prisma.walletTransactions.deleteMany({});
+  // await prisma.wallets.updateMany({
+  //   data: {
+  //     balance: 0,
+  //   },
+  // });
+  // await prisma.studentTermSheets.updateMany({
+  //   data: {
+  //     owing: 3000,
+  //   },
+  // });
+  const transactions = await prisma.walletTransactions.findMany({
     include: {
-      StudentTermSheets: {
-        // where: {
-        //   termId: +params.termSlug,
-        // },
+      StudentTermSheet: {
         include: {
-          ClassRoom: true,
+          Student: true,
         },
       },
     },
-    orderBy: {
-      name: "asc",
-    },
   });
-
-  let s = students.map((_s) => {
-    const termSheet = _s.StudentTermSheets.find(
-      (s) => s.termId == +params.termSlug
-    );
-    return {
-      ..._s,
-      termSheet,
-      amountOwed: _s.StudentTermSheets.map((s) => s.owing || 0).reduce(
-        (a, b) => a + b,
-        0
-      ),
-    };
-  });
-
   // console.log(classRooms);
   return (
     <div className="">
-      <StudentListShell params={params} list={s as any} />
+      <Header lng={params.lng} title="transactions" back />
+      <TransactionsListShell params={params} list={transactions as any} />
       {/* <StudentForm classRooms={classRooms} /> */}
       <StudentOptionSheet lng={params.lng} />
       <SetStudentClassSheet

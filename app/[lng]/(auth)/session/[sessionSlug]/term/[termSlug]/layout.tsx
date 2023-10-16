@@ -9,7 +9,7 @@ export default async function TermLayout({ children, params }) {
   return (
     <>
       <Params params={params} />
-      <Header lng={params.lng} />
+      {/* <Header lng={params.lng} /> */}
       {children}
     </>
   );

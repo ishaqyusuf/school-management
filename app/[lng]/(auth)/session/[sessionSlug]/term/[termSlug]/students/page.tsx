@@ -4,6 +4,7 @@ import StudentOptionSheet from "@/components/sheets/student-option-sheet";
 import StudentPaymentFormSheet from "@/components/sheets/student-payment-form";
 import SetStudentClassSheet from "@/components/sheets/set-student-class-sheet";
 import UpdateStudentPayableSheet from "@/components/sheets/update-student-payable";
+import Header from "@/components/header";
 export default async function StudentsPage({ searchParams, params }) {
   const students = await prisma.students.findMany({
     where: {},
@@ -39,6 +40,7 @@ export default async function StudentsPage({ searchParams, params }) {
   // console.log(classRooms);
   return (
     <div className="">
+      <Header title="students" lng={params.lng} back />
       <StudentListShell params={params} list={s as any} />
       {/* <StudentForm classRooms={classRooms} /> */}
       <StudentOptionSheet lng={params.lng} />

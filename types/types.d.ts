@@ -2,7 +2,6 @@ import {
   AcademicTerms,
   AcademicYears,
   ClassRoom,
-  StudentPayments,
   StudentTermSheets,
   Students,
   WalletTransactions,
@@ -36,7 +35,7 @@ export interface IStudentTermSheet extends Omit<StudentTermSheets, "meta"> {
   meta: {
     payable: number;
   };
-  Fees: StudentPayments[];
+  Transactions: WalletTransactions[];
   Term: AcademicTerms & {
     AcademicYear: AcademicYears;
   };
@@ -49,14 +48,12 @@ export interface IOwingData {
   studentTermId;
 }
 export interface MakePaymentData extends IOwingData {
-  payment: Partial<StudentPayments>;
+  payment: Partial<WalletTransactions>;
   // studentTermId;
   payable;
 }
 export interface IWalletTransactions extends WalletTransactions {
-  payment: StudentPayments & {
-    StudentTermSheet: StudentTermSheets & {
-      Student: Students;
-    };
+  StudentTermSheet: StudentTermSheets & {
+    Student: Students;
   };
 }

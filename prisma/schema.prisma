@@ -126,7 +126,7 @@ model StudentTermSheets {
   meta         Json?                @db.Json
   createdAt    DateTime?            @db.Timestamp(0)
   updatedAt    DateTime?            @db.Timestamp(0)
-  Fees         StudentPayments[]
+  // Fees         StudentPayments[]
   Transactions WalletTransactions[]
   Term         AcademicTerms        @relation(fields: [termId], references: [id])
   Student      Students             @relation(fields: [studentId], references: [id])
@@ -149,20 +149,22 @@ model WalletTransactions {
   academicTermsId     Int
   academicYearsId     Int
   userId              Int
-  amount              Float?
+  updateWallet        Boolean?
+  amount              Float
   description         String?
-  type                String //debit,credit
+  transaction         String? //debit,credit
+  type                String
   meta                Json?              @db.Json
   createdAt           DateTime?          @db.Timestamp(0)
   updatedAt           DateTime?          @db.Timestamp(0)
-  paymentId           Int?
+  // paymentId           Int?
   studentTermSheetsId Int?
-  studentPaymentsId   Int?
-  payment             StudentPayments?   @relation(fields: [studentPaymentsId], references: [id])
+  // studentPaymentsId   Int?
+  // payment             StudentPayments?   @relation(fields: [studentPaymentsId], references: [id])
   User                Users              @relation(fields: [userId], references: [id])
   AcademicYear        AcademicYears      @relation(fields: [academicYearsId], references: [id])
   AcademicTerm        AcademicTerms      @relation(fields: [academicTermsId], references: [id])
-  StudentTermSheets   StudentTermSheets? @relation(fields: [studentTermSheetsId], references: [id])
+  StudentTermSheet    StudentTermSheets? @relation(fields: [studentTermSheetsId], references: [id])
 }
 
 model Users {
@@ -176,14 +178,14 @@ model Users {
   updatedAt    DateTime?            @db.Timestamp(0)
 }
 
-model StudentPayments {
-  id               Int                  @unique @default(autoincrement())
-  amount           Float?
-  paymentType      String
-  note             String?
-  createdAt        DateTime?            @db.Timestamp(0)
-  updatedAt        DateTime?            @db.Timestamp(0)
-  studentTermId    Int
-  transactions     WalletTransactions[]
-  StudentTermSheet StudentTermSheets    @relation(fields: [studentTermId], references: [id])
-}
+// model StudentPayments {
+//   id               Int                  @unique @default(autoincrement())
+//   amount           Float?
+//   paymentType      String
+//   note             String?
+//   createdAt        DateTime?            @db.Timestamp(0)
+//   updatedAt        DateTime?            @db.Timestamp(0)
+//   studentTermId    Int
+//   transactions     WalletTransactions[]
+//   StudentTermSheet StudentTermSheets    @relation(fields: [studentTermId], references: [id])
+// }
