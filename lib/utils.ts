@@ -52,8 +52,9 @@ export function generateRandomString(length) {
   return randomString;
 }
 export const formatCurrency = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "NGN", // Replace with your desired currency code
+  // style: "currency",
+  // currencySign: "I",
+  // currency: "NGN", // Replace with your desired currency code
 })
 export function kFormatter(num) {
     const v = Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1) as any) + 'k' : Math.sign(num)*Math.abs(num)
@@ -114,6 +115,13 @@ export function toEnglish(num)
 
   return keyValuePairs;
 }
+export function sum<T>(array: T[], key: keyof T | undefined = undefined) {
+    return array
+        .map(v => (!key ? v : v?.[key]))
+        .map(v => (v ? Number(v) : null))
+        .filter(v => (v as any) > 0 && !isNaN(v as any))
+        .reduce((sum, val) => (sum || 0) + (val as number), 0);
+}
 export function termLink(params,link)
 {
   if(!params)
@@ -121,7 +129,7 @@ export function termLink(params,link)
   const {sessionSlug,termSlug}= params
   
   return `/session/${sessionSlug}/term/${termSlug}/${link}`
-}export function labelValue(label,value?)
+}export function labelValue(label,value?,extras?)
 {
-  return {label,value}
+  return {label,value,extras: extras || {}}
 }

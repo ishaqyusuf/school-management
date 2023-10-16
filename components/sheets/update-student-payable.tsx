@@ -14,7 +14,7 @@ import { _createStudent, _updateStudent } from "@/app/_action/_student";
 import { useParams } from "next/navigation";
 import { closeModal } from "@/lib/modal";
 import SelectInput from "../shared/select-input";
-import { Form, FormField } from "../ui/form";
+import { Form } from "../ui/form";
 import { useTranslation } from "@/app/i18n/client";
 import { labelValue, toArabic } from "@/lib/utils";
 import { Button } from "../ui/button";
@@ -22,13 +22,13 @@ import FormInput from "../shared/form-input";
 import {
   _getStudentPaymentInformation,
   _makePayment,
+  _setStudentTermPayable,
 } from "@/app/_action/_payment";
 import { Label } from "../ui/label";
 import { StudentPayments } from "@prisma/client";
 import { Badge } from "../ui/badge";
-import { Switch } from "../ui/switch";
 
-export default function StudentPaymentFormSheet({ lng }) {
+export default function UpdateStudentPayableSheet({ lng }) {
   const form = useForm<{
     amount;
     type;
@@ -36,8 +36,6 @@ export default function StudentPaymentFormSheet({ lng }) {
   }>({
     defaultValues: {
       amount: "",
-      type: "fee",
-      updateWallet: true,
     },
   });
   const amount = form.watch("amount");
@@ -48,31 +46,9 @@ export default function StudentPaymentFormSheet({ lng }) {
     startTransition(async () => {
       const formData = form.getValues();
       const amount = +formData.amount;
-      let payments: MakePaymentData[] = [];
-      let balance = amount;
-      paymentInfo.owingHistory.map((h) => {
-        if (balance == 0) return;
-        let _amount = balance > h.owing ? balance : h.owing;
-        balance -= _amount;
-        payments.push({
-          ...h,
-          payable: h.owing - _amount,
-          payment: {
-            amount: _amount,
-            // payable: h.owing - _amount,
-            paymentType: formData.type,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        });
-      });
-      await _makePayment({
-        // ...h,
-        payments,
-        ...formData,
-        studentId: data.id,
-        amount,
-      });
+      // const owing = data.termSheet.owing;
+      await _setStudentTermPayable(data.termSheet.id, amount);
+      // const owed = data.amountOwed;
       closeModal();
     });
   }
@@ -85,15 +61,12 @@ export default function StudentPaymentFormSheet({ lng }) {
     owingHistory: IOwingData[];
   }>({} as any);
   async function init(data) {
-    const paymentInfo = await _getStudentPaymentInformation(data.id);
-    // console.log(paymentInfo);
-    setPaymentInfo(paymentInfo as any);
-    form.reset({ amount: "", type: "fee", updateWallet: true });
+    console.log(data);
   }
   return (
     <BaseSheet<IStudent>
       side="bottom"
-      modalName="applyPayment"
+      modalName="updateStudentPayable"
       onOpen={(data) => init(data)}
       Title={({ data }) => <div>{data?.name}</div>}
       Content={({ data }) => (
@@ -106,32 +79,12 @@ export default function StudentPaymentFormSheet({ lng }) {
                   {data?.amountOwed}
                 </Badge>
               </div>
-              <SelectInput
-                label={t("payment-type")}
-                rtl
-                options={[
-                  labelValue(t("entrance-fee"), "entrance"),
-                  labelValue(t("school-fee"), "fee"),
-                ]}
-                form={form}
-                formKey={"type"}
-              />
+
               <FormInput
                 label={t("amount")}
                 rtl
                 form={form}
                 formKey={"amount"}
-              />
-              {/* {form.getValues("updateWallet") ? "true" : "false"} */}
-              <FormField
-                control={form.control}
-                name="updateWallet"
-                render={({ field }) => (
-                  <Switch
-                    checked={field.value as any}
-                    onCheckedChange={field.onChange}
-                  />
-                )}
               />
               <div className="flex flex-wrap">
                 {quickPayments.map((p) => (
@@ -150,7 +103,7 @@ export default function StudentPaymentFormSheet({ lng }) {
             </div>
             <div className="flex ltr:justify-end mt-4">
               <div>
-                <Btn onClick={save} isLoading={saving}>
+                <Btn onClick={() => save(data as any)} isLoading={saving}>
                   {t("apply")}
                 </Btn>
               </div>

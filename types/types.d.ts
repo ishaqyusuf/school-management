@@ -5,6 +5,7 @@ import {
   StudentPayments,
   StudentTermSheets,
   Students,
+  WalletTransactions,
 } from "@prisma/client";
 
 export interface StudentForm {
@@ -38,5 +39,24 @@ export interface IStudentTermSheet extends Omit<StudentTermSheets, "meta"> {
   Fees: StudentPayments[];
   Term: AcademicTerms & {
     AcademicYear: AcademicYears;
+  };
+}
+export interface IOwingData {
+  term;
+  owing;
+  termId;
+  yearId;
+  studentTermId;
+}
+export interface MakePaymentData extends IOwingData {
+  payment: Partial<StudentPayments>;
+  // studentTermId;
+  payable;
+}
+export interface IWalletTransactions extends WalletTransactions {
+  payment: StudentPayments & {
+    StudentTermSheet: StudentTermSheets & {
+      Student: Students;
+    };
   };
 }

@@ -22,5 +22,8 @@
   "school-fee": "رسوم المدرسة",
   "payment-type": "نوع الدفع",
   "amount-owed": "المبلغ المستحق",
-  "amount": "المبلغ"
+  "amount": "المبلغ",
+  "school-wallet": "محفظة المدرسة",
+  "school-accounting": "الحسابات المدرسية",
+  "update-payable": "مبلغ رسوم المدرسة"
 }

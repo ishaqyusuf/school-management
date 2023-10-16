@@ -38,3 +38,21 @@ export async function _bootstrap() {
   return { session, classes, term };
   // create students and register them to classroom
 }
+export async function _createSecondTerm() {
+  const firstTerm = await prisma.academicTerms.findFirst({
+    where: { title: `الفترة الأولى` },
+  });
+  if (firstTerm && !firstTerm.endsAt) {
+    const startedAt = firstTerm.startedAt;
+    const term = await _createAcademicTerm(1, {
+      title: `الفترة الثانية`,
+      startedAt: startedAt,
+    } as any);
+    await prisma.academicTerms.update({
+      where: { id: firstTerm.id },
+      data: {
+        endsAt: new Date(),
+      },
+    });
+  }
+}

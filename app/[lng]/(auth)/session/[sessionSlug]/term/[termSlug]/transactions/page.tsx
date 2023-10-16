@@ -4,7 +4,7 @@ import StudentOptionSheet from "@/components/sheets/student-option-sheet";
 import StudentPaymentFormSheet from "@/components/sheets/student-payment-form";
 import SetStudentClassSheet from "@/components/sheets/set-student-class-sheet";
 import UpdateStudentPayableSheet from "@/components/sheets/update-student-payable";
-export default async function StudentsPage({ searchParams, params }) {
+export default async function TransactionsPage({ searchParams, params }) {
   const students = await prisma.students.findMany({
     where: {},
     include: {

@@ -24,6 +24,8 @@ export type ModalName =
   | "studentForm"
   | "studentOptions"
   | "applyPayment"
+  | "setClass"
+  | "updateStudentPayable"
   | undefined;
 const initialState: ISlicer = ({
   modal: {

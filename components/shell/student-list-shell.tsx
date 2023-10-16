@@ -34,9 +34,11 @@ export default function StudentListShell({ list, params }: Props) {
               <div className="">
                 <p className="font-semibold">{student.name}</p>
                 <div className="flex space-x-2 items-center">
-                  <p className="text-muted-foreground text-sm">
-                    {student.termSheet?.ClassRoom?.title}
-                  </p>
+                  {student.termSheet && (
+                    <p className="text-muted-foreground text-sm">
+                      {student.termSheet?.ClassRoom?.title}
+                    </p>
+                  )}
                   <div className="flex-1"></div>
                   {student.amountOwed > 0 ? (
                     <Badge className="text-red-400" variant={"secondary"}>
