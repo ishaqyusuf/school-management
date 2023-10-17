@@ -24,8 +24,9 @@ export default function FormInput({
   label,
   placeholder,
   formKey,
+  type,
   rtl,
-}: InputProps) {
+}: InputProps & { type? }) {
   return (
     <FormField
       control={form.control}
@@ -35,6 +36,7 @@ export default function FormInput({
           <FormLabel>{label}</FormLabel>
           <FormControl>
             <Input
+              type={type}
               className={cn(rtl && "text-right")}
               placeholder={placeholder}
               {...field}

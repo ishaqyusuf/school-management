@@ -3,8 +3,8 @@
 import { Plus } from "lucide-react";
 import { Button } from "../ui/button";
 import { openModal } from "@/lib/modal";
-import { IStudent, IWalletTransactions } from "@/types/types";
-import { formatCurrency, sum, termLink, toArabic } from "@/lib/utils";
+import { IWalletTransactions } from "@/types/types";
+import { cn, formatCurrency, termLink, toArabic } from "@/lib/utils";
 import Link from "next/link";
 import { useAppSelector } from "@/store";
 import { Badge } from "../ui/badge";
@@ -26,14 +26,10 @@ export default function TransactionsListShell({ list, params }: Props) {
             key={i}
             className="text-right border-b p-2"
             onClick={() => {
-              // openModal("studentOptions", student);
+              openModal("transactionOption", transaction);
             }}
           >
             <div className="flex items-center">
-              {/* <div className="w-6">
-                {toArabic(i + 1)}
-                {"."}
-              </div> */}
               <div className="">
                 <p className="font-semibold">
                   {transaction?.StudentTermSheet?.Student?.name ||
@@ -43,24 +39,34 @@ export default function TransactionsListShell({ list, params }: Props) {
                 <div className="flex space-x-2 items-center">
                   {transaction.StudentTermSheet && (
                     <p className="text-muted-foreground text-sm">
-                      {t("school-fee")}
+                      {t("school-fee")} {"("}
+                      {transaction.StudentTermSheet?.Term?.title} {")"}
                     </p>
                   )}
                 </div>
               </div>
               <div className="flex-1"></div>
-              <p className="font-bold text-lg">
-                {toArabic(formatCurrency.format(transaction.amount))}
-              </p>
+              <div>
+                <p className="font-bold text-lg">
+                  {toArabic(formatCurrency.format(transaction.amount))}
+                </p>
+                <div
+                  className={cn(
+                    "rounded-lg w-full h-0.5",
+                    transaction.updateWallet ? "bg-green-500" : "bg-orange-500"
+                  )}
+                ></div>
+              </div>
             </div>
           </li>
         ))}
       </ul>
       <div className="fixed bottom-0 right-0 m-4">
-        <Button asChild className="w-12 h-12 p-0 rounded-full">
-          <Link href={termLink(params, "student/form/-1")}>
-            <Plus />
-          </Link>
+        <Button
+          onClick={() => openModal("transactionForm")}
+          className="w-12 h-12 p-0 rounded-full"
+        >
+          <Plus />
         </Button>
       </div>
     </div>

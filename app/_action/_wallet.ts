@@ -14,7 +14,8 @@ export async function updateWallet(amount, academicTermId) {
     },
     data: {
       balance: {
-        increment: amount,
+        increment: amount > 0 ? amount : undefined,
+        decrement: amount < 0 ? amount * -1 : undefined,
       },
     },
   });

@@ -6,6 +6,8 @@ import UpdateStudentPayableSheet from "@/components/sheets/update-student-payabl
 import TransactionsListShell from "@/components/shell/transactions-list-shell";
 import Header from "@/components/header";
 import { useTranslation } from "@/app/i18n";
+import TransactionOptionSheet from "@/components/sheets/transaction-option-sheet";
+import TransactionFormSheet from "@/components/sheets/transaction-form-sheet";
 export default async function TransactionsPage({ searchParams, params }) {
   // await prisma.walletTransactions.deleteMany({});
   // await prisma.wallets.updateMany({
@@ -23,6 +25,7 @@ export default async function TransactionsPage({ searchParams, params }) {
       StudentTermSheet: {
         include: {
           Student: true,
+          Term: true,
         },
       },
     },
@@ -32,15 +35,18 @@ export default async function TransactionsPage({ searchParams, params }) {
     <div className="">
       <Header lng={params.lng} title="transactions" back />
       <TransactionsListShell params={params} list={transactions as any} />
-      {/* <StudentForm classRooms={classRooms} /> */}
-      <StudentOptionSheet lng={params.lng} />
+
+      <TransactionOptionSheet lng={params.lng} />
       <SetStudentClassSheet
         lng={params.lng}
         termId={+params.termSlug}
         sessionId={+params.sessionSlug}
       />
-      <StudentPaymentFormSheet lng={params.lng} />
-      <UpdateStudentPayableSheet lng={params.lng} />
+      <TransactionFormSheet
+        lng={params.lng}
+        academicTermsId={+params.termSlug}
+        academicYearsId={+params.sessionSlug}
+      />
     </div>
   );
 }

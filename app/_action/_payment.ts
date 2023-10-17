@@ -103,6 +103,7 @@ export async function _getStudentPaymentInformation(studentId) {
   }).filter(Boolean);
   return {
     owing,
+    studentId,
     owingHistory,
   };
 }

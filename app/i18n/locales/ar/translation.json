@@ -26,5 +26,12 @@
   "school-wallet": "محفظة المدرسة",
   "school-accounting": "الحسابات المدرسية",
   "update-payable": "مبلغ رسوم المدرسة",
-  "transactions": "المعاملات"
+  "transactions": "المعاملات",
+  "delete": "حذف",
+  "include-transaction": "تضمّن في الحساب",
+  "omit-transaction": "أهمل من الحساب",
+  "credit": "دائن",
+  "debit": "مدين",
+  "transaction": "معاملة",
+  "description": "تفصيل"
 }

@@ -55,5 +55,8 @@ export interface MakePaymentData extends IOwingData {
 export interface IWalletTransactions extends WalletTransactions {
   StudentTermSheet: StudentTermSheets & {
     Student: Students;
+    Term: AcademicTerms & {
+      AcademicYear: AcademicYears;
+    };
   };
 }

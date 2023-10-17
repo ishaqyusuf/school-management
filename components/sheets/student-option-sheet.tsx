@@ -18,22 +18,6 @@ export default function StudentOptionSheet({ lng }) {
   const [saving, startTransition] = useTransition();
 
   const { t } = useTranslation(lng);
-  const p = useParams();
-  // const actions = [
-  //   labelValue(t("edit-details")),
-  //   // labelValue(t("change-class")),
-  //   labelValue(t("remove-from-class")),
-  //   labelValue(t("update-payable"), (data) => {
-  //     openModal("updateStudentPayable", data);
-  //   }),
-  //   labelValue(t("apply-payment"), (data) => {
-  //     openModal("applyPayment", data);
-  //   }),
-  //   labelValue(t("set-class"), (data) => {
-  //     openModal("setClass", data);
-  //   }),
-  //   labelValue(t("delete-student")),
-  // ];
   const [actions, setActions] = useState<any[]>([]);
   function init(data?: IStudent) {
     if (data) {

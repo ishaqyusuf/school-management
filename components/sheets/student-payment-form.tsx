@@ -78,10 +78,12 @@ export default function StudentPaymentFormSheet({ lng }) {
   }));
   const [paymentInfo, setPaymentInfo] = useState<{
     owing;
+    studentId;
     owingHistory: IOwingData[];
   }>({} as any);
   async function init(data) {
     const paymentInfo = await _getStudentPaymentInformation(data.id);
+
     console.log(paymentInfo);
     setPaymentInfo(paymentInfo as any);
     form.reset({ amount: "", type: "school-fee", updateWallet: true });
@@ -146,7 +148,11 @@ export default function StudentPaymentFormSheet({ lng }) {
             </div>
             <div className="flex ltr:justify-end mt-4">
               <div>
-                <Btn onClick={save} isLoading={saving}>
+                <Btn
+                  disabled={data?.id != paymentInfo?.studentId}
+                  onClick={save}
+                  isLoading={saving}
+                >
                   {t("apply")}
                 </Btn>
               </div>
