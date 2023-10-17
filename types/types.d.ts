@@ -52,7 +52,10 @@ export interface MakePaymentData extends IOwingData {
   // studentTermId;
   payable;
 }
-export interface IWalletTransactions extends WalletTransactions {
+export interface IWalletTransactions
+  extends Omit<WalletTransactions, "transaction" | "type"> {
+  transaction: "credit" | "debit";
+  type: "school_fee" | "other-payment" | "entrance-fee";
   StudentTermSheet: StudentTermSheets & {
     Student: Students;
     Term: AcademicTerms & {

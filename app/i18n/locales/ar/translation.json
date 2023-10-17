@@ -33,5 +33,6 @@
   "credit": "دائن",
   "debit": "مدين",
   "transaction": "معاملة",
-  "description": "تفصيل"
+  "description": "تفصيل",
+  "other-payment": "الدفعة الأخرى"
 }

@@ -6,7 +6,6 @@ import { IStudent, IWalletTransactions } from "@/types/types";
 import Btn from "../shared/btn";
 import { useTransition } from "react";
 import { _createStudent, _updateStudent } from "@/app/_action/_student";
-import { useParams } from "next/navigation";
 import { closeModal } from "@/lib/modal";
 import SelectInput from "../shared/select-input";
 import { Form, FormField } from "../ui/form";
@@ -31,22 +30,29 @@ export default function TransactionFormSheet({
   const [saving, startTransition] = useTransition();
 
   const { t } = useTranslation(lng);
-  async function save(data: IStudent) {
+  async function save(data: IWalletTransactions) {
     startTransition(async () => {
       const formData = form.getValues();
       const amount = +formData.amount;
-      await _createTransaction({
-        ...formData,
-        amount,
-        academicTermsId,
-        academicYearsId,
-      });
+      await _createTransaction(
+        {
+          ...formData,
+          amount,
+          academicTermsId,
+          academicYearsId,
+        },
+        data
+      );
       closeModal();
     });
   }
 
   async function init(data) {
-    form.reset({ transaction: "credit", updateWallet: true });
+    form.reset({
+      transaction: "credit",
+      updateWallet: true,
+      type: "other-payment",
+    });
   }
   return (
     <BaseSheet<IStudent>
@@ -67,6 +73,17 @@ export default function TransactionFormSheet({
                 ]}
                 form={form}
                 formKey={"transaction"}
+              />
+              <SelectInput
+                label={t("payment-type")}
+                rtl
+                options={[
+                  labelValue(t("entrance-fee"), "entrance-fee"),
+                  labelValue(t("school-fee"), "school-fee"),
+                  labelValue(t("other-payment"), "other-payment"),
+                ]}
+                form={form}
+                formKey={"type"}
               />
               <FormInput
                 label={t("description")}
