@@ -7,18 +7,23 @@ export async function updateWallet(amount, academicTermId) {
   //   await prisma.$queryRaw`INSERT INTO wallets (id, balance)
   // VALUES (1, ${amount})
   // ON DUPLICATE KEY UPDATE balance = balance + ${amount};`;
-  await prisma.wallets.update({
-    where: {
-      // id: 1
-      academicTermId,
-    },
-    data: {
-      balance: {
-        increment: amount > 0 ? amount : undefined,
-        decrement: amount < 0 ? amount * -1 : undefined,
+  const balance: any = {};
+  if (amount > 0) balance.increment = amount;
+  else if (amount < 0) balance.decrement = amount * -1;
+
+  if (balance.increment || balance.decrement) {
+    console.log(">>>>>>>>>>>");
+    console.log(balance);
+    await prisma.wallets.updateMany({
+      where: {
+        // id: 1
+        academicTermId,
       },
-    },
-  });
+      data: {
+        balance,
+      },
+    });
+  }
   //   await prisma.$queryRaw`INSERT INTO "Wallets" (id, balance)
   // VALUES (1, ${amount})
   // ON CONFLICT (id)

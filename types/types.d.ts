@@ -56,10 +56,10 @@ export interface IWalletTransactions
   extends Omit<WalletTransactions, "transaction" | "type"> {
   transaction: "credit" | "debit";
   type: "school_fee" | "other-payment" | "entrance-fee";
+  AcademicTerm: AcademicTerms & {
+    AcademicYear: AcademicYears;
+  };
   StudentTermSheet: StudentTermSheets & {
     Student: Students;
-    Term: AcademicTerms & {
-      AcademicYear: AcademicYears;
-    };
   };
 }

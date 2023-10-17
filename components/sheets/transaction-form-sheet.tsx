@@ -18,6 +18,7 @@ import {
 } from "@/app/_action/_payment";
 import { Switch } from "../ui/switch";
 import { _createTransaction } from "@/app/_action/_transaction";
+import { deepCopy } from "@/lib/deep-copy";
 
 export default function TransactionFormSheet({
   lng,
@@ -32,8 +33,10 @@ export default function TransactionFormSheet({
   const { t } = useTranslation(lng);
   async function save(data: IWalletTransactions) {
     startTransition(async () => {
-      const formData = form.getValues();
+      const formData = deepCopy<IWalletTransactions>(form.getValues());
+      console.log(formData);
       const amount = +formData.amount;
+      console.log([data]);
       await _createTransaction(
         {
           ...formData,
@@ -42,24 +45,35 @@ export default function TransactionFormSheet({
           academicYearsId,
         },
         data
+          ? {
+              academicTermsId: data.academicYearsId,
+              amount: data.amount,
+              id: data.id,
+              transaction: data.transaction,
+              updateWallet: data.updateWallet,
+            }
+          : (null as any)
       );
       closeModal();
     });
   }
 
   async function init(data) {
-    form.reset({
-      transaction: "credit",
-      updateWallet: true,
-      type: "other-payment",
-    });
+    console.log(data);
+    form.reset(
+      ...(data || {
+        transaction: "credit",
+        updateWallet: true,
+        type: "other-payment",
+      })
+    );
   }
   return (
     <BaseSheet<IStudent>
       side="bottom"
       modalName="transactionForm"
       onOpen={(data) => init(data)}
-      Title={({ data }) => <div>{data?.name}</div>}
+      // Title={({ data }) => <div>{data?.name}</div>}
       Content={({ data }) => (
         <Form {...form}>
           <div className="">
@@ -111,7 +125,7 @@ export default function TransactionFormSheet({
             </div>
             <div className="flex ltr:justify-end mt-4">
               <div>
-                <Btn onClick={save} isLoading={saving}>
+                <Btn onClick={() => save(data as any)} isLoading={saving}>
                   {t("apply")}
                 </Btn>
               </div>

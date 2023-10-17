@@ -4,10 +4,7 @@ import { Plus } from "lucide-react";
 import { Button } from "../ui/button";
 import { openModal } from "@/lib/modal";
 import { IWalletTransactions } from "@/types/types";
-import { cn, formatCurrency, termLink, toArabic } from "@/lib/utils";
-import Link from "next/link";
-import { useAppSelector } from "@/store";
-import { Badge } from "../ui/badge";
+import { cn, formatCurrency, toArabic } from "@/lib/utils";
 import { useTranslation } from "@/app/i18n/client";
 
 interface Props {
@@ -33,16 +30,15 @@ export default function TransactionsListShell({ list, params }: Props) {
               <div className="">
                 <p className="font-semibold">
                   {transaction?.StudentTermSheet?.Student?.name ||
-                    transaction.description}
+                    t(transaction.type)}
                 </p>
 
-                <div className="flex space-x-2 items-center">
+                <div className="flex space-x-2 items-center text-muted-foreground text-sm">
                   {transaction.StudentTermSheet && (
-                    <p className="text-muted-foreground text-sm">
-                      {t("school-fee")} {"("}
-                      {transaction.StudentTermSheet?.Term?.title} {")"}
-                    </p>
+                    <p className="">{t("school-fee")}</p>
                   )}
+                  {"("}
+                  {transaction.AcademicTerm?.title} {")"}
                 </div>
               </div>
               <div className="flex-1"></div>

@@ -25,8 +25,16 @@ export async function _includeTransaction(id, amount, termId) {
 }
 export async function _createTransaction(
   data: IWalletTransactions,
-  oldData: IWalletTransactions
+  oldData: {
+    transaction;
+    academicTermsId;
+    amount;
+    updateWallet;
+    id;
+  }
 ) {
+  console.log("=========");
+  // return;
   let formData: Partial<WalletTransactions> = {
     amount: data.amount,
     type: data.type,
@@ -36,7 +44,9 @@ export async function _createTransaction(
     transaction: data.transaction,
     updateWallet: data.updateWallet,
   };
+  let academicTermsId = data.academicTermsId;
   if (!oldData) {
+    // console.log(formData);
     formData = {
       ...formData,
       createdAt: new Date(),
@@ -44,14 +54,18 @@ export async function _createTransaction(
       academicYearsId: data.academicYearsId,
       userId: 1,
     };
+    // console.log(formData);
     await prisma.walletTransactions.create({
       data: formData as any,
     });
   } else {
+    academicTermsId = oldData.academicTermsId;
     //
-    let multiplier = 1;
-    if (oldData.transaction == "credit") multiplier = -1;
-    await updateWallet(oldData.amount * multiplier, oldData.academicTermsId);
+    if (oldData.updateWallet) {
+      let multiplier = 1;
+      if (oldData.transaction == "credit") multiplier = -1;
+      await updateWallet(oldData.amount * multiplier, academicTermsId);
+    }
     await prisma.walletTransactions.update({
       where: { id: oldData.id },
       data: {
@@ -60,9 +74,7 @@ export async function _createTransaction(
     });
   }
   const multiplier = data.transaction == "credit" ? 1 : -1;
-  await updateWallet(
-    data.amount * multiplier,
-    oldData?.academicTermsId || data.academicTermsId
-  );
+  console.log(`TermId: ${academicTermsId}`);
+  await updateWallet(data.amount * multiplier, academicTermsId);
   await _revalidate("transactions");
 }

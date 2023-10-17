@@ -29,6 +29,7 @@ export default function TransactionOptionSheet({ lng }) {
     closeModal();
   }
   async function includeTransaction(data: IWalletTransactions) {
+    console.log([data.id, data.amount, data.academicTermsId]);
     await _includeTransaction(data.id, data.amount, data.academicTermsId);
     closeModal();
   }
