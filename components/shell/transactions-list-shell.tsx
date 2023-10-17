@@ -26,7 +26,7 @@ export default function TransactionsListShell({ list, params }: Props) {
             key={i}
             className="text-right border-b p-2"
             onClick={() => {
-              openModal("transactionForm", transaction);
+              openModal("transactionOption", transaction);
             }}
           >
             <div className="flex items-center">

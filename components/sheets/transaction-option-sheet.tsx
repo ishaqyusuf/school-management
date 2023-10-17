@@ -49,6 +49,9 @@ export default function TransactionOptionSheet({ lng }) {
               {t("include-transaction")}
             </OptionMenu>
           )}
+          <OptionMenu onClick={() => openModal("transactionForm", data)}>
+            {t("edit")}
+          </OptionMenu>
           <OptionMenu warn>{t("delete")}</OptionMenu>
         </div>
       )}
