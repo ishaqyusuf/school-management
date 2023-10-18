@@ -59,8 +59,8 @@ export default async function StudentsPage({ searchParams, params }) {
         sessionId={+params.sessionSlug}
       />
       <StudentPaymentFormSheet
-        academicTermsId={params.termSlug}
-        academicYearsId={params.sessionSlug}
+        academicTermsId={+params.termSlug}
+        academicYearsId={+params.sessionSlug}
         lng={params.lng}
       />
       <UpdateStudentPayableSheet lng={params.lng} />

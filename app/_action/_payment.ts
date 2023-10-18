@@ -19,6 +19,7 @@ export async function _payEntraceFee(
     data: {
       Transactions: {
         create: {
+          userId: 1,
           ...(tx as any),
         },
       },

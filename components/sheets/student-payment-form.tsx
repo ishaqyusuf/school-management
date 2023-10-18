@@ -107,7 +107,7 @@ export default function StudentPaymentFormSheet({
   }>({} as any);
   async function init(data) {
     const paymentInfo = await _getStudentPaymentInformation(data.id);
-    console.log(paymentInfo);
+    console.log(data);
     setPaymentInfo(paymentInfo as any);
     form.reset({ amount: "", type: "school-fee", updateWallet: true });
   }
@@ -173,7 +173,7 @@ export default function StudentPaymentFormSheet({
               <div>
                 <Btn
                   disabled={data?.id != paymentInfo?.studentId}
-                  onClick={save}
+                  onClick={() => save(data as any)}
                   isLoading={saving}
                 >
                   {t("apply")}
