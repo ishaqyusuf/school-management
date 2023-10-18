@@ -35,7 +35,7 @@ export default function TransactionsListShell({ list, params }: Props) {
 
                 <div className="flex space-x-2 items-center text-muted-foreground text-sm">
                   {transaction.StudentTermSheet && (
-                    <p className="">{t("school-fee")}</p>
+                    <p className="">{t(transaction.type)}</p>
                   )}
                   {"("}
                   {transaction.AcademicTerm?.title} {")"}

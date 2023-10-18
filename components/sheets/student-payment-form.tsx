@@ -67,31 +67,33 @@ export default function StudentPaymentFormSheet({
           createdAt: new Date(),
           updatedAt: new Date(),
         } as any);
-      }
-      paymentInfo.owingHistory.map((h) => {
-        if (balance == 0) return;
-        let _amount = balance > h.owing ? balance : h.owing;
-        balance -= _amount;
-        payments.push({
-          ...h,
-          payable: h.owing - _amount,
-          payment: {
-            amount: _amount,
-            // payable: h.owing - _amount,
-            transaction: "credit",
-            type: formData.type,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
+        return;
+      } else {
+        paymentInfo.owingHistory.map((h) => {
+          if (balance == 0) return;
+          let _amount = balance > h.owing ? balance : h.owing;
+          balance -= _amount;
+          payments.push({
+            ...h,
+            payable: h.owing - _amount,
+            payment: {
+              amount: _amount,
+              // payable: h.owing - _amount,
+              transaction: "credit",
+              type: formData.type,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            },
+          });
         });
-      });
-      await _makePayment({
-        // ...h,
-        payments,
-        ...formData,
-        studentId: data.id,
-        amount,
-      });
+        await _makePayment({
+          // ...h,
+          payments,
+          ...formData,
+          studentId: data.id,
+          amount,
+        });
+      }
       closeModal();
     });
   }

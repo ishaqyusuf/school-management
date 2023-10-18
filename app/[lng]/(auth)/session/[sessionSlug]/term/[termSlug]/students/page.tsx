@@ -6,15 +6,7 @@ import SetStudentClassSheet from "@/components/sheets/set-student-class-sheet";
 import UpdateStudentPayableSheet from "@/components/sheets/update-student-payable";
 import Header from "@/components/header";
 export default async function StudentsPage({ searchParams, params }) {
-  // const t = await prisma.studentTermSheets.updateMany({
-  //   where: {
-  //     owing: null,
-  //   },
-  //   data: {
-  //     owing: 3000,
-  //   },
-  // });
-  // console.log(t);
+  // console.log(d =>)
   const students = await prisma.students.findMany({
     where: {},
     include: {

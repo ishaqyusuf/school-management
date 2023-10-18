@@ -16,6 +16,7 @@ import { useTranslation } from "@/app/i18n/client";
 import OptionMenu from "../shared/option-menu";
 import { Delete, Trash } from "lucide-react";
 import {
+  _deleteTransaction,
   _includeTransaction,
   _omitTransaction,
 } from "@/app/_action/_transaction";
@@ -29,8 +30,11 @@ export default function TransactionOptionSheet({ lng }) {
     closeModal();
   }
   async function includeTransaction(data: IWalletTransactions) {
-    console.log([data.id, data.amount, data.academicTermsId]);
     await _includeTransaction(data.id, data.amount, data.academicTermsId);
+    closeModal();
+  }
+  async function deleteTransaction(data: IWalletTransactions) {
+    await _deleteTransaction(data);
     closeModal();
   }
   return (
@@ -53,7 +57,9 @@ export default function TransactionOptionSheet({ lng }) {
           <OptionMenu onClick={() => openModal("transactionForm", data)}>
             {t("edit")}
           </OptionMenu>
-          <OptionMenu warn>{t("delete")}</OptionMenu>
+          <OptionMenu onClick={() => deleteTransaction(data as any)} warn>
+            {t("delete")}
+          </OptionMenu>
         </div>
       )}
     />

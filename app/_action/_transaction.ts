@@ -74,7 +74,37 @@ export async function _createTransaction(
     });
   }
   const multiplier = data.transaction == "credit" ? 1 : -1;
-  console.log(`TermId: ${academicTermsId}`);
   await updateWallet(data.amount * multiplier, academicTermsId);
+  await _revalidate("transactions");
+}
+export async function _deleteTransaction({
+  updateWallet: _updateWallet,
+  id,
+  type,
+  transaction,
+  amount,
+  academicTermsId,
+  studentTermSheetsId,
+}: Partial<IWalletTransactions>) {
+  if (_updateWallet) {
+    let multiplier = 1;
+    if (transaction == "credit") multiplier = -1;
+    await updateWallet((amount || 0) * multiplier, academicTermsId);
+  }
+  if (type == "school-fee" && studentTermSheetsId) {
+    await prisma.studentTermSheets.update({
+      where: {
+        id: studentTermSheetsId,
+      },
+      data: {
+        owing: {
+          increment: amount || 0,
+        },
+      },
+    });
+  }
+  await prisma.walletTransactions.delete({
+    where: { id },
+  });
   await _revalidate("transactions");
 }
