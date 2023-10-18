@@ -32,7 +32,7 @@ export default function StudentFormSheet({ classRooms }: Props) {
       console.log(formData);
       formData.termId = Number(p?.termSlug);
       if (formData.id) await _updateStudent(formData);
-      else await _createStudent(formData);
+      // else await _createStudent(formData);
       closeModal();
     });
   }
