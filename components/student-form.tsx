@@ -22,7 +22,9 @@ export default function StudentFormComponent({ classRooms, params }: Props) {
   const { t } = useTranslation(params.lng);
   const form = useForm<StudentForm>({
     defaultValues: {
-      meta: {},
+      meta: {
+        schoolFee: 3000,
+      },
     },
   });
   const [saving, startTransition] = useTransition();
@@ -33,6 +35,7 @@ export default function StudentFormComponent({ classRooms, params }: Props) {
       const formData = form.getValues();
       // console.log(formData);
       formData.termId = Number(p?.termSlug);
+      formData.meta.schoolFee = Number(formData.meta.schoolFee || 0);
       if (formData.id) await _updateStudent(formData);
       else {
         await _createStudent(formData);
@@ -84,6 +87,12 @@ export default function StudentFormComponent({ classRooms, params }: Props) {
               rtl
               form={form}
               formKey={"phoneNo"}
+            />
+            <FormInput
+              label={t("school-fee")}
+              rtl
+              form={form}
+              formKey={"meta.schoolFee"}
             />
           </div>
           <div className="flex justify-end mt-4">

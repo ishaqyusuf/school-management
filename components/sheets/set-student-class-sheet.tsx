@@ -33,7 +33,13 @@ export default function SetStudentClassSheet({ lng, sessionId, termId }) {
   async function applyClassRoom(data: IStudent, classRoom: ClassRoom) {
     if (data.termSheet)
       await _changeStudentClassroom(data.termSheet.id, classRoom.id);
-    else await _addStudentToClass(data.id, classRoom.id, termId);
+    else
+      await _addStudentToClass(
+        data.id,
+        classRoom.id,
+        termId,
+        data.meta?.schoolFee || 0
+      );
     closeModal();
     toast.success(t("success"));
   }

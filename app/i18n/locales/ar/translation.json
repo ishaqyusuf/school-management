@@ -36,5 +36,6 @@
   "debit": "مدين",
   "transaction": "معاملة",
   "description": "تفصيل",
-  "other-payment": "الدفعة الأخرى"
+  "other-payment": "الدفعة الأخرى",
+  "update-all-terms": "فطرة الماضية معا"
 }

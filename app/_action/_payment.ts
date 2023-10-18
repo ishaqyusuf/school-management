@@ -1,7 +1,11 @@
 "use server";
 
 import { prisma } from "@/db";
-import { IStudentTermSheet, MakePaymentData } from "@/types/types";
+import {
+  IStudentMeta,
+  IStudentTermSheet,
+  MakePaymentData,
+} from "@/types/types";
 import { revalidatePath } from "next/cache";
 import { updateWallet } from "./_wallet";
 import { sum } from "@/lib/utils";
@@ -130,22 +134,64 @@ export async function _getStudentPaymentInformation(studentId) {
   };
 }
 
-export async function _setStudentTermPayable(studentTermId, payable) {
-  const payments = await prisma.walletTransactions.findMany({
+export async function _setStudentTermPayable({
+  studentTermId,
+  studentId,
+  payable,
+  studentMeta,
+  allTerms = false,
+}: {
+  studentTermId;
+  studentId;
+  payable;
+  studentMeta?: IStudentMeta;
+  allTerms: boolean;
+}) {
+  await Promise.all(
+    (
+      await prisma.studentTermSheets.findMany({
+        where: {
+          studentId,
+        },
+        include: {
+          Transactions: {
+            where: {
+              type: "school-fee",
+            },
+          },
+        },
+      })
+    ).map(async (sheet) => {
+      if (allTerms || sheet.id == studentTermId) {
+        // const payments = await prisma.walletTransactions.findMany({
+        //   where: {
+        //     studentTermSheetsId: sheet.id,
+        //     type: "school-fee",
+        //   },
+        // });
+        const paid = sum(sheet.Transactions, "amount") || 0;
+        const owing = payable - paid;
+        // console.log(owing);
+        // return;
+        await prisma.studentTermSheets.update({
+          where: {
+            id: sheet.id,
+          },
+          data: {
+            payable,
+            owing,
+          },
+        });
+      }
+    })
+  );
+  await prisma.students.update({
     where: {
-      studentTermSheetsId: studentTermId,
-      description: "school-fee",
-    },
-  });
-  const paid = sum(payments, "amount") || 0;
-  const owing = payable - paid;
-  await prisma.studentTermSheets.update({
-    where: {
-      id: studentTermId,
+      id: studentId,
     },
     data: {
-      payable,
-      owing,
+      meta: studentMeta as any,
+      updatedAt: new Date(),
     },
   });
   _revalidate("students");

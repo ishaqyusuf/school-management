@@ -25,11 +25,15 @@ export interface IStudentTermSheet extends StudentTermSheets {
   Student: Students;
   ClassRoom: ClassRoom;
 }
-export interface IStudent extends Students {
+export interface IStudent extends Omit<Students, "meta"> {
   termSheet: StudentTermSheets & {
     ClassRoom: ClassRoom;
   };
   amountOwed;
+  meta: IStudentMeta;
+}
+export interface IStudentMeta {
+  schoolFee: number;
 }
 export interface IStudentTermSheet extends Omit<StudentTermSheets, "meta"> {
   meta: {

@@ -27,13 +27,13 @@ export async function _changeStudentClassroom(studentTermId, classId) {
   });
   revalidatePath("/[lng]/[sessionSlug]/[termSlug]/students", "page");
 }
-export async function _addStudentToClass(studentId, classId, termId) {
+export async function _addStudentToClass(studentId, classId, termId, payable) {
   await prisma.studentTermSheets.create({
     data: {
       classId,
       studentId,
-      payable: 3000,
-      owing: 3000,
+      payable,
+      owing: payable,
       termId,
       createdAt: new Date(),
       updatedAt: new Date(),

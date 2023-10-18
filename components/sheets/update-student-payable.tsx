@@ -14,7 +14,7 @@ import { _createStudent, _updateStudent } from "@/app/_action/_student";
 import { useParams } from "next/navigation";
 import { closeModal } from "@/lib/modal";
 import SelectInput from "../shared/select-input";
-import { Form } from "../ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { useTranslation } from "@/app/i18n/client";
 import { labelValue, toArabic } from "@/lib/utils";
 import { Button } from "../ui/button";
@@ -27,12 +27,13 @@ import {
 import { Label } from "../ui/label";
 
 import { Badge } from "../ui/badge";
+import { Switch } from "../ui/switch";
+import { Checkbox } from "../ui/checkbox";
 
 export default function UpdateStudentPayableSheet({ lng }) {
   const form = useForm<{
     amount;
-    type;
-    updateWallet;
+    allTerms;
   }>({
     defaultValues: {
       amount: "",
@@ -46,23 +47,24 @@ export default function UpdateStudentPayableSheet({ lng }) {
     startTransition(async () => {
       const formData = form.getValues();
       const amount = +formData.amount;
-      // const owing = data.termSheet.owing;
-      await _setStudentTermPayable(data.termSheet.id, amount);
-      // const owed = data.amountOwed;
+      await _setStudentTermPayable({
+        payable: amount,
+        studentId: data.id,
+        studentTermId: data.termSheet.id,
+        allTerms: formData.allTerms,
+        studentMeta: {
+          ...(data.meta || {}),
+          schoolFee: amount,
+        } as any,
+      });
       closeModal();
     });
   }
-  const quickPayments = [500, 1000, 1500, 2000, 2500, 3000].map((v) => ({
+  const quickPayments = [0, 500, 1000, 1500, 2000, 2500, 3000].map((v) => ({
     en: v,
     ar: toArabic(v),
   }));
-  const [paymentInfo, setPaymentInfo] = useState<{
-    owing;
-    owingHistory: IOwingData[];
-  }>({} as any);
-  async function init(data) {
-    console.log(data);
-  }
+  async function init(data) {}
   return (
     <BaseSheet<IStudent>
       side="bottom"
@@ -76,16 +78,17 @@ export default function UpdateStudentPayableSheet({ lng }) {
               <div className="flex  space-x-4 items-center">
                 <Label>{t("amount-owed")}:</Label>
                 <Badge variant={"secondary"} className="font-bold text-red-500">
-                  {data?.amountOwed}
+                  {data?.meta?.schoolFee || 0}
                 </Badge>
               </div>
+              {/* 
 
               <FormInput
                 label={t("amount")}
                 rtl
                 form={form}
                 formKey={"amount"}
-              />
+              /> */}
               <div className="flex flex-wrap">
                 {quickPayments.map((p) => (
                   <Button
@@ -100,6 +103,21 @@ export default function UpdateStudentPayableSheet({ lng }) {
                   </Button>
                 ))}
               </div>
+              <FormField
+                control={form.control}
+                name="allTerms"
+                render={({ field }) => (
+                  <FormItem className="">
+                    <FormLabel>{t("update-all-terms")}</FormLabel>
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value as any}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
             </div>
             <div className="flex ltr:justify-end mt-4">
               <div>
