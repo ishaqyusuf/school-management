@@ -1,11 +1,25 @@
 "use server";
 
 import { prisma } from "@/db";
-import { StudentForm } from "@/types/types";
+import { IStudentFormTerms, StudentForm } from "@/types/types";
 import { revalidatePath } from "next/cache";
+import { _makePayment, _payEntranceFee } from "./_payment";
+import { sum } from "@/lib/utils";
 
 export async function _updateStudent(data: StudentForm) {}
-export async function _createStudent(data: StudentForm) {
+export async function _createStudent(
+  data: StudentForm,
+  {
+    terms,
+    entranceForm,
+  }: {
+    terms: IStudentFormTerms[];
+    entranceForm?: {
+      checked: boolean;
+      updateWallet: boolean;
+    };
+  }
+) {
   const student = await prisma.students.create({
     data: {
       name: data.name,
@@ -14,20 +28,83 @@ export async function _createStudent(data: StudentForm) {
         ...data.meta,
       },
       StudentTermSheets: {
-        create: data.classId
-          ? {
-              termId: +data.termId,
-              classId: +data.classId,
-              payable: data.meta.schoolFee,
-              owing: data.meta.schoolFee,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            }
-          : undefined,
+        createMany:
+          data.classId && terms.length
+            ? {
+                data: terms.map((term) => ({
+                  termId: term.id,
+                  classId: +data.classId,
+                  payable: data.meta.schoolFee,
+                  owing: data.meta.schoolFee - term.amount,
+                  createdAt: new Date(),
+                  updatedAt: new Date(),
+                })),
+              }
+            : undefined,
+        // create: data.classId
+        //   ? {
+        //       termId: +data.termId,
+        //       classId: +data.classId,
+        //       payable: data.meta.schoolFee,
+        //       owing: data.meta.schoolFee,
+        //       createdAt: new Date(),
+        //       updatedAt: new Date(),
+        //     }
+        //   : undefined,
       },
       createdAt: new Date(),
       updatedAt: new Date(),
     },
+    include: {
+      StudentTermSheets: {
+        orderBy: {
+          termId: "desc",
+        },
+        include: {
+          Term: true,
+        },
+      },
+    },
   });
+  const termSheets = student.StudentTermSheets;
+  const currentTerm = termSheets?.[0];
+  if (currentTerm) {
+    if (entranceForm?.checked) {
+      await _payEntranceFee(
+        termSheets[0]?.id,
+        {
+          academicTermsId: currentTerm.termId,
+          academicYearsId: currentTerm.Term.academicYearId,
+          updateWallet: entranceForm.updateWallet,
+        },
+        false
+      );
+
+      if (terms.length) {
+        await _makePayment(
+          {
+            studentId: student.id,
+            payments: terms
+              .map((t) => {
+                const termSheet = termSheets.find((_t) => _t.termId == t.id);
+                if (!termSheet) return null as any;
+                return {
+                  owing: termSheet.owing,
+                  studentTermId: termSheet.id,
+                  termId: termSheet.termId,
+                  yearId: termSheet.Term.academicYearId,
+                  payment: {
+                    updateWallet: t.updateWallet,
+                    type: "school-fee",
+                  },
+                };
+              })
+              .filter(Boolean), //.filter(Boolean)
+          },
+          false
+        );
+      }
+    }
+  }
   revalidatePath("/[sessionSlug]/[termSlug]/students", "page");
 }

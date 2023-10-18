@@ -37,5 +37,9 @@
   "transaction": "معاملة",
   "description": "تفصيل",
   "other-payment": "الدفعة الأخرى",
-  "update-all-terms": "فطرة الماضية معا"
+  "update-all-terms": "فطرة الماضية معا",
+  "student-form": "نموذج الطالب",
+  "term": "الفترة",
+  "payment": "الدفع",
+  "update-wallet": "تحديث المحفظة"
 }

@@ -22,7 +22,7 @@ import FormInput from "../shared/form-input";
 import {
   _getStudentPaymentInformation,
   _makePayment,
-  _payEntraceFee,
+  _payEntranceFee,
 } from "@/app/_action/_payment";
 import { Label } from "../ui/label";
 import { Badge } from "../ui/badge";
@@ -56,16 +56,10 @@ export default function StudentPaymentFormSheet({
       let payments: MakePaymentData[] = [];
       let balance = amount;
       if (formData.type == "entrance-fee") {
-        await _payEntraceFee(data.termSheet.id, {
+        await _payEntranceFee(data.termSheet.id, {
           academicTermsId,
           academicYearsId,
-          amount,
-          transaction: "credit",
           updateWallet: formData.updateWallet,
-          type: formData.type,
-          meta: {} as any,
-          createdAt: new Date(),
-          updatedAt: new Date(),
         } as any);
         return;
       } else {
@@ -75,14 +69,11 @@ export default function StudentPaymentFormSheet({
           balance -= _amount;
           payments.push({
             ...h,
-            payable: h.owing - _amount,
+            owing: h.owing - _amount,
             payment: {
               amount: _amount,
-              // payable: h.owing - _amount,
-              transaction: "credit",
+              updateWallet: formData.updateWallet,
               type: formData.type,
-              createdAt: new Date(),
-              updatedAt: new Date(),
             },
           });
         });
@@ -91,7 +82,6 @@ export default function StudentPaymentFormSheet({
           payments,
           ...formData,
           studentId: data.id,
-          amount,
         });
       }
       closeModal();

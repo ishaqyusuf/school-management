@@ -1,3 +1,4 @@
+import Header from "@/components/header";
 import StudentFormComponent from "@/components/student-form";
 import { prisma } from "@/db";
 
@@ -7,9 +8,19 @@ export default async function StudentFormPage({ searchParams, params }) {
       academicYearsId: +params.sessionSlug,
     },
   });
+  const terms = await prisma.academicTerms.findMany({
+    where: {
+      academicYearId: +params.sessionSlug,
+    },
+  });
   return (
     <div className="p-4">
-      <StudentFormComponent params={params} classRooms={classRooms} />
+      <Header title={"student-form"} back lng={params.lng} />
+      <StudentFormComponent
+        params={params}
+        terms={terms}
+        classRooms={classRooms}
+      />
     </div>
   );
 }

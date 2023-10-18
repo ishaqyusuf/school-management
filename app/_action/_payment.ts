@@ -12,9 +12,10 @@ import { sum } from "@/lib/utils";
 import { WalletTransactions } from "@prisma/client";
 import { _revalidate } from "./_revalidate";
 
-export async function _payEntraceFee(
+export async function _payEntranceFee(
   termSheetId,
-  tx: Partial<WalletTransactions>
+  tx: Partial<WalletTransactions>,
+  revalidate = true
 ) {
   await prisma.studentTermSheets.update({
     where: {
@@ -24,40 +25,48 @@ export async function _payEntraceFee(
       Transactions: {
         create: {
           userId: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
           ...(tx as any),
+          type: "entrance-fee",
+          transaction: "credit",
+          amount: 500,
+          meta: tx?.meta || ({} as any),
         },
       },
     },
   });
   if (tx.updateWallet) await updateWallet(tx.amount, tx.academicTermsId);
-  _revalidate("students");
+  if (revalidate) _revalidate("students");
 }
-export async function _makePayment(data: {
-  payments: MakePaymentData[];
-  studentId;
-  amount;
-  updateWallet;
-}) {
+export async function _makePayment(
+  data: {
+    payments: MakePaymentData[];
+    studentId;
+    // amount;
+  },
+  validate = true
+) {
   await Promise.all(
     data.payments.map(async (p) => {
-      const { studentTermId, payment, termId, yearId, payable } = p;
-
+      const { studentTermId, payment, termId, yearId, owing } = p;
+      if (!payment.amount) return;
       await prisma.studentTermSheets.update({
         where: {
           id: studentTermId,
         },
         data: {
-          owing: payable,
+          owing,
           Transactions: {
             create: {
               academicTermsId: termId,
               academicYearsId: yearId,
               // description: "school-fee",
               userId: 1,
-              updateWallet: data.updateWallet,
+              updateWallet: payment.updateWallet,
               type: payment.type as string,
               transaction: "credit",
-              amount: data.amount,
+              amount: payment.amount as any,
               meta: {},
               createdAt: new Date(),
               updatedAt: new Date(),
@@ -65,11 +74,10 @@ export async function _makePayment(data: {
           },
         },
       });
-
-      if (data.updateWallet) await updateWallet(data.amount, termId);
+      if (updateWallet) await updateWallet(payment.amount, termId);
     })
   );
-  _revalidate("students");
+  if (validate) _revalidate("students");
 }
 export async function _getStudentPaymentInformation(studentId) {
   const student = await prisma.students.findFirst({

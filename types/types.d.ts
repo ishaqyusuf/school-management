@@ -35,6 +35,11 @@ export interface IStudent extends Omit<Students, "meta"> {
 export interface IStudentMeta {
   schoolFee: number;
 }
+export interface IStudentFormTerms {
+  id;
+  amount;
+  updateWallet;
+}
 export interface IStudentTermSheet extends Omit<StudentTermSheets, "meta"> {
   meta: {
     payable: number;
@@ -54,7 +59,7 @@ export interface IOwingData {
 export interface MakePaymentData extends IOwingData {
   payment: Partial<WalletTransactions>;
   // studentTermId;
-  payable;
+  // payable;
 }
 export type IPaymentType = "school-fee" | "other-payment" | "entrance-fee";
 export interface IWalletTransactions

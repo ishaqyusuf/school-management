@@ -1,30 +1,48 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { StudentForm } from "@/types/types";
+import { IStudentFormTerms, StudentForm } from "@/types/types";
 import { useTransition } from "react";
 import { _createStudent, _updateStudent } from "@/app/_action/_student";
-import { ClassRoom } from "@prisma/client";
+import { AcademicTerms, ClassRoom } from "@prisma/client";
 import { useParams, useRouter } from "next/navigation";
-import { Form } from "./ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import FormInput from "./shared/form-input";
 import SelectInput from "./shared/select-input";
 import Btn from "./shared/btn";
 import { toast } from "sonner";
 import { termLink } from "@/lib/utils";
 import { useTranslation } from "@/app/i18n/client";
+import { Checkbox } from "./ui/checkbox";
+import { Label } from "./ui/label";
 
 interface Props {
   classRooms: ClassRoom[];
   params;
+  terms: AcademicTerms[];
 }
-export default function StudentFormComponent({ classRooms, params }: Props) {
+export default function StudentFormComponent({
+  classRooms,
+  terms,
+  params,
+}: Props) {
   const { t } = useTranslation(params.lng);
-  const form = useForm<StudentForm>({
+  const form = useForm<
+    StudentForm & {
+      entranceForm: {
+        checked: boolean;
+        updateWallet: boolean;
+      };
+      terms: {
+        [termId in any]: { amount; updateWallet; checked };
+      };
+    }
+  >({
     defaultValues: {
       meta: {
         schoolFee: 3000,
       },
+      terms: {},
     },
   });
   const [saving, startTransition] = useTransition();
@@ -32,13 +50,26 @@ export default function StudentFormComponent({ classRooms, params }: Props) {
   const router = useRouter();
   async function save() {
     startTransition(async () => {
-      const formData = form.getValues();
-      // console.log(formData);
+      const { terms, entranceForm, ...formData } = form.getValues();
+      console.log(terms);
+      // return;
       formData.termId = Number(p?.termSlug);
       formData.meta.schoolFee = Number(formData.meta.schoolFee || 0);
       if (formData.id) await _updateStudent(formData);
       else {
-        await _createStudent(formData);
+        const _terms: IStudentFormTerms[] = [];
+        Object.entries(terms).map(([k, v]) => {
+          if (v?.checked)
+            _terms.push({
+              id: +k,
+              amount: +v.amount || 0,
+              updateWallet: v.updateWallet,
+            });
+        });
+        await _createStudent(formData, {
+          entranceForm,
+          terms: _terms,
+        });
         toast(t("success"), {
           action: {
             label: t("go-back"),
@@ -95,6 +126,89 @@ export default function StudentFormComponent({ classRooms, params }: Props) {
               form={form}
               formKey={"meta.schoolFee"}
             />
+            <div className="col-span-2">
+              <div className="grid grid-cols-6 gap-2">
+                <Label className="col-span-3">{t("term")}</Label>
+                <Label className="col-span-2">{t("payment")}</Label>
+                <Label>{t("update-wallet")}</Label>
+              </div>
+              {terms.map((term) => (
+                <div
+                  className="grid grid-cols-6 gap-2 items-center"
+                  key={term.id}
+                >
+                  <FormField
+                    key={term.id}
+                    control={form.control}
+                    name={`terms.${term.id.toString()}.checked`}
+                    render={({ field }) => (
+                      <FormItem className="col-span-3">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value as any}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <FormLabel>{term.title}</FormLabel>
+                      </FormItem>
+                    )}
+                  />
+                  <FormInput
+                    rtl
+                    className={"col-span-2"}
+                    form={form}
+                    formKey={`terms.${term.id.toString()}.amount`}
+                  />
+                  <FormField
+                    key={term.id}
+                    control={form.control}
+                    name={`terms.${term.id.toString()}.updateWallet`}
+                    render={({ field }) => (
+                      <FormItem className="">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value as any}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="col-span-2 grid gap-2">
+              <FormField
+                control={form.control}
+                name={`entranceForm.checked`}
+                render={({ field }) => (
+                  <FormItem className="col-span-3">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value as any}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormLabel>{t("entrance-form")}</FormLabel>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`entranceForm.updateWallet`}
+                render={({ field }) => (
+                  <FormItem className="col-span-3">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value as any}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormLabel>{t("update-wallet")}</FormLabel>
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
           <div className="flex justify-end mt-4">
             <div>
