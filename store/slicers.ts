@@ -21,6 +21,7 @@ export interface ISlicer {
 }
 
 export type ModalName =
+  | "studentFilter"
   | "studentForm"
   | "studentOptions"
   | "applyPayment"

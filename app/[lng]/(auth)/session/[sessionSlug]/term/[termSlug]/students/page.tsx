@@ -5,6 +5,8 @@ import StudentPaymentFormSheet from "@/components/sheets/student-payment-form";
 import SetStudentClassSheet from "@/components/sheets/set-student-class-sheet";
 import UpdateStudentPayableSheet from "@/components/sheets/update-student-payable";
 import Header from "@/components/header";
+import StudentFilterSheet from "@/components/sheets/filters/student-filter-sheet";
+import { _getClassRooms } from "@/app/_action/_class-room";
 export default async function StudentsPage({ searchParams, params }) {
   const students = await prisma.students.findMany({
     where: {},
@@ -22,7 +24,7 @@ export default async function StudentsPage({ searchParams, params }) {
       name: "asc",
     },
   });
-
+  const classRooms = await _getClassRooms(+params.sessionSlug);
   let s = students.map((_s) => {
     const termSheet = _s.StudentTermSheets.find(
       (s) => s.termId == +params.termSlug
@@ -40,7 +42,7 @@ export default async function StudentsPage({ searchParams, params }) {
   // console.log(classRooms);
   return (
     <div className="">
-      <Header title="students" lng={params.lng} back />
+      <Header title="students" filter="studentFilter" lng={params.lng} back />
       <StudentListShell params={params} list={s as any} />
       {/* <StudentForm classRooms={classRooms} /> */}
       <StudentOptionSheet lng={params.lng} />
@@ -55,6 +57,11 @@ export default async function StudentsPage({ searchParams, params }) {
         lng={params.lng}
       />
       <UpdateStudentPayableSheet lng={params.lng} />
+      <StudentFilterSheet
+        ClassRooms={classRooms}
+        lng={params.lng}
+        query={searchParams}
+      />
     </div>
   );
 }

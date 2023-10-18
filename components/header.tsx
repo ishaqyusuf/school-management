@@ -3,15 +3,18 @@
 import { useTranslation } from "@/app/i18n/client";
 import i18next from "i18next";
 import { Button } from "./ui/button";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Filter } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { ModalName } from "@/store/slicers";
+import { openModal } from "@/lib/modal";
 
 interface Props {
   lng;
   back?: Boolean;
   title?;
+  filter?: ModalName;
 }
-export default function Header({ lng, title }: Props) {
+export default function Header({ lng, title, filter }: Props) {
   const { t, i18n } = useTranslation(lng);
   const router = useRouter();
   return (
@@ -24,7 +27,20 @@ export default function Header({ lng, title }: Props) {
           // });
         }}
       >
-        <div className=""></div>
+        <div className="">
+          {filter && (
+            <Button
+              onClick={() => {
+                openModal(filter);
+              }}
+              className="p-1 h-8 w-8"
+              variant="secondary"
+              size="icon"
+            >
+              <Filter className="w-4 h-4" />
+            </Button>
+          )}
+        </div>
         <p className="font-bold text-lg"> {t(title)}</p>
         <div className="">
           <Button
