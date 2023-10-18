@@ -7,23 +7,9 @@ import UpdateStudentPayableSheet from "@/components/sheets/update-student-payabl
 import Header from "@/components/header";
 import StudentFilterSheet from "@/components/sheets/filters/student-filter-sheet";
 import { _getClassRooms } from "@/app/_action/_class-room";
+import { _getStudents } from "@/app/_action/_student";
 export default async function StudentsPage({ searchParams, params }) {
-  const students = await prisma.students.findMany({
-    where: {},
-    include: {
-      StudentTermSheets: {
-        // where: {
-        //   termId: +params.termSlug,
-        // },
-        include: {
-          ClassRoom: true,
-        },
-      },
-    },
-    orderBy: {
-      name: "asc",
-    },
-  });
+  const students = await _getStudents(searchParams, params);
   const classRooms = await _getClassRooms(+params.sessionSlug);
   let s = students.map((_s) => {
     const termSheet = _s.StudentTermSheets.find(

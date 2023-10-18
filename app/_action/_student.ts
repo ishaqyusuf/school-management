@@ -1,11 +1,36 @@
 "use server";
 
 import { prisma } from "@/db";
-import { IStudentFormTerms, StudentForm } from "@/types/types";
+import { IQuery, IStudentFormTerms, StudentForm } from "@/types/types";
 import { revalidatePath } from "next/cache";
 import { _makePayment, _payEntranceFee } from "./_payment";
 import { sum } from "@/lib/utils";
-
+import { Prisma } from "@prisma/client";
+export async function _getStudents(query: IQuery, params) {
+  const where: Prisma.StudentsWhereInput = {};
+  if (query._classId) {
+    where.StudentTermSheets = {
+      some: {
+        classId: +query._classId,
+        termId: +params.termSlug,
+      },
+    };
+  }
+  const students = await prisma.students.findMany({
+    where,
+    include: {
+      StudentTermSheets: {
+        include: {
+          ClassRoom: true,
+        },
+      },
+    },
+    orderBy: {
+      name: "asc",
+    },
+  });
+  return students;
+}
 export async function _updateStudent(data: StudentForm) {}
 export async function _createStudent(
   data: StudentForm,

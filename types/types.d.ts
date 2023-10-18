@@ -73,3 +73,6 @@ export interface IWalletTransactions
     Student: Students;
   };
 }
+export interface IQuery {
+  _classId;
+}
