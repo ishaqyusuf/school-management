@@ -52,10 +52,11 @@ export interface MakePaymentData extends IOwingData {
   // studentTermId;
   payable;
 }
+export type IPaymentType = "school-fee" | "other-payment" | "entrance-fee";
 export interface IWalletTransactions
   extends Omit<WalletTransactions, "transaction" | "type"> {
   transaction: "credit" | "debit";
-  type: "school_fee" | "other-payment" | "entrance-fee";
+  type: IPaymentType;
   AcademicTerm: AcademicTerms & {
     AcademicYear: AcademicYears;
   };

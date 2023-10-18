@@ -2,7 +2,12 @@
 
 import { useForm } from "react-hook-form";
 import BaseSheet from "./base-sheet";
-import { IOwingData, IStudent, MakePaymentData } from "@/types/types";
+import {
+  IOwingData,
+  IPaymentType,
+  IStudent,
+  MakePaymentData,
+} from "@/types/types";
 import Btn from "../shared/btn";
 import { useState, useTransition } from "react";
 import { _createStudent, _updateStudent } from "@/app/_action/_student";
@@ -17,15 +22,20 @@ import FormInput from "../shared/form-input";
 import {
   _getStudentPaymentInformation,
   _makePayment,
+  _payEntraceFee,
 } from "@/app/_action/_payment";
 import { Label } from "../ui/label";
 import { Badge } from "../ui/badge";
 import { Switch } from "../ui/switch";
 
-export default function StudentPaymentFormSheet({ lng }) {
+export default function StudentPaymentFormSheet({
+  lng,
+  academicTermsId,
+  academicYearsId,
+}) {
   const form = useForm<{
     amount;
-    type;
+    type: IPaymentType;
     updateWallet;
   }>({
     defaultValues: {
@@ -45,6 +55,20 @@ export default function StudentPaymentFormSheet({ lng }) {
       const amount = +formData.amount;
       let payments: MakePaymentData[] = [];
       let balance = amount;
+      if (formData.type == "entrance-fee") {
+        await _payEntraceFee(data.termSheet.id, {
+          academicTermsId,
+          academicYearsId,
+          amount,
+          transaction: "credit",
+          updateWallet: formData.updateWallet,
+          studentTermSheetsId: data.termSheet.id,
+          type: formData.type,
+          meta: {} as any,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        } as any);
+      }
       paymentInfo.owingHistory.map((h) => {
         if (balance == 0) return;
         let _amount = balance > h.owing ? balance : h.owing;
@@ -83,7 +107,6 @@ export default function StudentPaymentFormSheet({ lng }) {
   }>({} as any);
   async function init(data) {
     const paymentInfo = await _getStudentPaymentInformation(data.id);
-
     console.log(paymentInfo);
     setPaymentInfo(paymentInfo as any);
     form.reset({ amount: "", type: "school-fee", updateWallet: true });

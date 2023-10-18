@@ -5,7 +5,28 @@ import { IStudentTermSheet, MakePaymentData } from "@/types/types";
 import { revalidatePath } from "next/cache";
 import { updateWallet } from "./_wallet";
 import { sum } from "@/lib/utils";
+import { WalletTransactions } from "@prisma/client";
+import { _revalidate } from "./_revalidate";
 
+export async function _payEntraceFee(
+  termSheetId,
+  tx: Partial<WalletTransactions>
+) {
+  await prisma.studentTermSheets.update({
+    where: {
+      id: termSheetId,
+    },
+    data: {
+      Transactions: {
+        create: {
+          ...(tx as any),
+        },
+      },
+    },
+  });
+  if (tx.updateWallet) await updateWallet(tx.amount, tx.academicTermsId);
+  _revalidate("students");
+}
 export async function _makePayment(data: {
   payments: MakePaymentData[];
   studentId;
@@ -43,7 +64,7 @@ export async function _makePayment(data: {
       if (data.updateWallet) await updateWallet(data.amount, termId);
     })
   );
-  revalidatePath("/[lng]/session/[sessionSlug]/term/[termSlug]/students");
+  _revalidate("students");
 }
 export async function _getStudentPaymentInformation(studentId) {
   const student = await prisma.students.findFirst({
@@ -126,5 +147,5 @@ export async function _setStudentTermPayable(studentTermId, payable) {
       owing,
     },
   });
-  revalidatePath("/[lng]/[sessionSlug]/[termSlug]/students", "page");
+  _revalidate("students");
 }
