@@ -60,7 +60,7 @@ export default function SelectInput({
           <FormLabel className={cn(rtl && "text-right")}>{label}</FormLabel>
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>
-              <SelectTrigger>
+              <SelectTrigger className="h-8 px-2">
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>

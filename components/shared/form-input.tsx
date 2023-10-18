@@ -39,7 +39,7 @@ export default function FormInput({
             <FormControl>
               <Input
                 type={type}
-                className={cn(rtl && "text-right")}
+                className={cn("h-8 px-2")}
                 placeholder={placeholder}
                 {...field}
               />
