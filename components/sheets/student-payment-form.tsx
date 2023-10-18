@@ -62,7 +62,6 @@ export default function StudentPaymentFormSheet({
           amount,
           transaction: "credit",
           updateWallet: formData.updateWallet,
-          studentTermSheetsId: data.termSheet.id,
           type: formData.type,
           meta: {} as any,
           createdAt: new Date(),
