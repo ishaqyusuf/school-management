@@ -18,7 +18,7 @@ export async function _createStudent(data: StudentForm) {
           ? {
               termId: +data.termId,
               classId: +data.classId,
-              payable: +data.meta.schoolFee || 3000,
+              payable: +data.meta?.schoolFee || 3000,
               createdAt: new Date(),
               updatedAt: new Date(),
             }

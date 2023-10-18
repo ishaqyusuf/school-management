@@ -70,8 +70,8 @@ export default async function HomePage({ searchParams, params }) {
         <DashboardCard
           className="col-span-2"
           link={termLink(params, "transactions")}
-          title={t("school-wallet")}
-          subtitle={t("school-accounting")}
+          title={t("wallet")}
+          subtitle={t("school-account")}
           value={toArabic(formatCurrency.format(sum(wallets, "balance") || 0))}
         />
       </div>

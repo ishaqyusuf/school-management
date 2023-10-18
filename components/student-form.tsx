@@ -13,17 +13,17 @@ import Btn from "./shared/btn";
 import { toast } from "sonner";
 import { termLink } from "@/lib/utils";
 import { useTranslation } from "@/app/i18n/client";
- 
 
 interface Props {
   classRooms: ClassRoom[];
   params;
 }
 export default function StudentFormComponent({ classRooms, params }: Props) {
-
-  const {t} = useTranslation(params.lng)
+  const { t } = useTranslation(params.lng);
   const form = useForm<StudentForm>({
-    defaultValues: {},
+    defaultValues: {
+      meta: {},
+    },
   });
   const [saving, startTransition] = useTransition();
   const p = useParams();
@@ -36,9 +36,9 @@ export default function StudentFormComponent({ classRooms, params }: Props) {
       if (formData.id) await _updateStudent(formData);
       else {
         await _createStudent(formData);
-        toast(t('success'), {
+        toast(t("success"), {
           action: {
-            label: t('go-back'),
+            label: t("go-back"),
             onClick: () => router.push(termLink(params, "students")),
           },
         });
@@ -51,16 +51,21 @@ export default function StudentFormComponent({ classRooms, params }: Props) {
       <Form {...form}>
         <div className="min-h-[75vh]">
           <div className="grid gap-4">
-            <FormInput label={t('student-name')} rtl form={form} formKey={"name"} />
+            <FormInput
+              label={t("student-name")}
+              rtl
+              form={form}
+              formKey={"name"}
+            />
             <SelectInput
               label={t("sex")}
               rtl
-              options={[t('male'), t('female')]}
+              options={[t("male"), t("female")]}
               form={form}
               formKey={"sex"}
             />
             <SelectInput
-              label={t('class')}
+              label={t("class")}
               rtl
               options={classRooms}
               itemValue={"id"}
@@ -69,13 +74,13 @@ export default function StudentFormComponent({ classRooms, params }: Props) {
               formKey={"classId"}
             />
             <FormInput
-              label={t('parent-name')}
+              label={t("parent-name")}
               rtl
               form={form}
               formKey={"parentName"}
             />
             <FormInput
-              label={t('parent-phone')}
+              label={t("parent-phone")}
               rtl
               form={form}
               formKey={"phoneNo"}
@@ -84,7 +89,7 @@ export default function StudentFormComponent({ classRooms, params }: Props) {
           <div className="flex justify-end mt-4">
             <div>
               <Btn onClick={save} isLoading={saving}>
-                {t('register')}
+                {t("register")}
               </Btn>
             </div>
           </div>
