@@ -179,7 +179,8 @@ export async function _setStudentTermPayable({
         //   },
         // });
         const paid = sum(sheet.Transactions, "amount") || 0;
-        const owing = payable - paid;
+        let owing = payable - paid;
+        if (owing < 0) owing = 0;
         // console.log(owing);
         // return;
         await prisma.studentTermSheets.update({
