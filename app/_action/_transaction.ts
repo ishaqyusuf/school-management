@@ -101,6 +101,7 @@ export async function _deleteTransaction({
   await prisma.walletTransactions.delete({
     where: { id },
   });
+  await _updateWallet(academicTermsId);
   await _revalidate("transactions");
 }
 export async function _synchronizeTransaction() {}
