@@ -81,6 +81,8 @@ export async function _createStudent(
       );
 
       if (terms.length) {
+        console.log(termSheets);
+        console.log(terms);
         await _makePayment(
           {
             studentId: student.id,
@@ -94,6 +96,7 @@ export async function _createStudent(
                   termId: termSheet.termId,
                   yearId: termSheet.Term.academicYearId,
                   payment: {
+                    amount: t.amount,
                     updateWallet: t.updateWallet,
                     type: "school-fee",
                   },

@@ -16,13 +16,15 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage({ searchParams, params }) {
-  // await prisma.wallets.update({
-  //   where: { id: 1 },
-  //   data: {
-  //     academicTermId: 1,
-  //     academicYearId: 1,
-  //   },
-  // });
+  // const _sum = sum(
+  //   await prisma.walletTransactions.findMany({
+  //     where: {
+  //       updateWallet: true,
+  //     },
+  //   }),
+  //   "amount"
+  // );
+
   const academicTermId = +params.termSlug;
   const wallets = await prisma.wallets.findMany({
     // where: {

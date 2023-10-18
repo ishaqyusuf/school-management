@@ -7,7 +7,7 @@ import {
   MakePaymentData,
 } from "@/types/types";
 import { revalidatePath } from "next/cache";
-import { updateWallet } from "./_wallet";
+import { _updateWallet } from "./_wallet";
 import { sum } from "@/lib/utils";
 import { WalletTransactions } from "@prisma/client";
 import { _revalidate } from "./_revalidate";
@@ -36,7 +36,7 @@ export async function _payEntranceFee(
       },
     },
   });
-  if (tx.updateWallet) await updateWallet(tx.amount, tx.academicTermsId);
+  if (tx.updateWallet) await _updateWallet(tx.academicTermsId);
   if (revalidate) _revalidate("students");
 }
 export async function _makePayment(
@@ -47,6 +47,7 @@ export async function _makePayment(
   },
   validate = true
 ) {
+  console.log(data);
   await Promise.all(
     data.payments.map(async (p) => {
       const { studentTermId, payment, termId, yearId, owing } = p;
@@ -74,7 +75,7 @@ export async function _makePayment(
           },
         },
       });
-      if (updateWallet) await updateWallet(payment.amount, termId);
+      if (payment.updateWallet) await _updateWallet(termId);
     })
   );
   if (validate) _revalidate("students");
