@@ -126,7 +126,7 @@ export default function StudentFormComponent({
               form={form}
               formKey={"meta.schoolFee"}
             />
-            <div className="col-span-2">
+            <div className="col-span-2 border p-2 rounded-lg">
               <div className="grid grid-cols-6 gap-2">
                 <Label className="col-span-3">{t("term")}</Label>
                 <Label className="col-span-2">{t("payment")}</Label>
@@ -177,19 +177,19 @@ export default function StudentFormComponent({
                 </div>
               ))}
             </div>
-            <div className="col-span-2 grid gap-2">
+            <div className="col-span-2 grid grid-cols-2 border p-2 rounded-lg gap-2">
               <FormField
                 control={form.control}
                 name={`entranceForm.checked`}
                 render={({ field }) => (
-                  <FormItem className="col-span-3">
+                  <FormItem className="">
                     <FormControl>
                       <Checkbox
                         checked={field.value as any}
                         onCheckedChange={field.onChange}
                       />
                     </FormControl>
-                    <FormLabel>{t("entrance-form")}</FormLabel>
+                    <FormLabel>{t("entrance-fee")}</FormLabel>
                   </FormItem>
                 )}
               />
@@ -197,7 +197,7 @@ export default function StudentFormComponent({
                 control={form.control}
                 name={`entranceForm.updateWallet`}
                 render={({ field }) => (
-                  <FormItem className="col-span-3">
+                  <FormItem className="">
                     <FormControl>
                       <Checkbox
                         checked={field.value as any}
