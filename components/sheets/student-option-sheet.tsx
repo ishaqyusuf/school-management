@@ -38,8 +38,8 @@ export default function StudentOptionSheet({ lng }) {
           t("apply-payment"),
           (data) => {
             openModal("applyPayment", data);
-          },
-          { disabled: !data.amountOwed }
+          }
+          // { disabled: !data.amountOwed }
         ),
         labelValue(t("set-class"), (data) => {
           openModal("setClass", data);

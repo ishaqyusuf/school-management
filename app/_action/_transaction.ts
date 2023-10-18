@@ -1,7 +1,6 @@
 "use server";
 
 import { prisma } from "@/db";
-import { revalidatePath } from "next/cache";
 import { updateWallet } from "./_wallet";
 import { _revalidate } from "./_revalidate";
 import { IWalletTransactions } from "@/types/types";
@@ -33,7 +32,6 @@ export async function _createTransaction(
     id;
   }
 ) {
-  console.log("=========");
   // return;
   let formData: Partial<WalletTransactions> = {
     amount: data.amount,

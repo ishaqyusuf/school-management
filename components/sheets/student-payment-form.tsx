@@ -71,7 +71,7 @@ export default function StudentPaymentFormSheet({
       } else {
         paymentInfo.owingHistory.map((h) => {
           if (balance == 0) return;
-          let _amount = balance > h.owing ? balance : h.owing;
+          let _amount = balance < h.owing ? balance : h.owing;
           balance -= _amount;
           payments.push({
             ...h,
