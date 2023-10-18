@@ -53,10 +53,11 @@ export default function StudentFormComponent({ classRooms, params }: Props) {
     <>
       <Form {...form}>
         <div className="min-h-[75vh]">
-          <div className="grid gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <FormInput
               label={t("student-name")}
               rtl
+              className="col-span-2"
               form={form}
               formKey={"name"}
             />

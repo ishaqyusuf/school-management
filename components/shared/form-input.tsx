@@ -24,30 +24,33 @@ export default function FormInput({
   label,
   placeholder,
   formKey,
+  className,
   type,
   rtl,
-}: InputProps & { type? }) {
+}: InputProps & { type?; className? }) {
   return (
-    <FormField
-      control={form.control}
-      name={formKey}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
-            <Input
-              type={type}
-              className={cn(rtl && "text-right")}
-              placeholder={placeholder}
-              {...field}
-            />
-          </FormControl>
-          {/* <FormDescription>
-                           This is your public display name.
-                         </FormDescription> */}
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+    <div className={cn(className)}>
+      <FormField
+        control={form.control}
+        name={formKey}
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>{label}</FormLabel>
+            <FormControl>
+              <Input
+                type={type}
+                className={cn(rtl && "text-right")}
+                placeholder={placeholder}
+                {...field}
+              />
+            </FormControl>
+            {/* <FormDescription>
+                             This is your public display name.
+                           </FormDescription> */}
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </div>
   );
 }
