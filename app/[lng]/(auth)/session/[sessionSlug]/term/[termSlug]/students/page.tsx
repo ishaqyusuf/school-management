@@ -1,4 +1,3 @@
-import { prisma } from "@/db";
 import StudentListShell from "@/components/shell/student-list-shell";
 import StudentOptionSheet from "@/components/sheets/student-option-sheet";
 import StudentPaymentFormSheet from "@/components/sheets/student-payment-form";

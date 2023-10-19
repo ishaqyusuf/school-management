@@ -45,6 +45,14 @@ export async function _createStudent(
     };
   }
 ) {
+  if (
+    await prisma.students.count({
+      where: {
+        name: data.name,
+      },
+    })
+  )
+    throw new Error("student-exists");
   const student = await prisma.students.create({
     data: {
       name: data.name,

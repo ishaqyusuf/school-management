@@ -55,27 +55,32 @@ export default function StudentFormComponent({
       // return;
       formData.termId = Number(p?.termSlug);
       formData.meta.schoolFee = Number(formData.meta.schoolFee || 0);
-      if (formData.id) await _updateStudent(formData);
-      else {
-        const _terms: IStudentFormTerms[] = [];
-        Object.entries(terms).map(([k, v]) => {
-          if (v?.checked)
-            _terms.push({
-              id: +k,
-              amount: +v.amount || 0,
-              updateWallet: v.updateWallet,
-            });
-        });
-        await _createStudent(formData, {
-          entranceForm,
-          terms: _terms,
-        });
-        toast(t("success"), {
-          action: {
-            label: t("go-back"),
-            onClick: () => router.push(termLink(params, "students")),
-          },
-        });
+      try {
+        if (formData.id) await _updateStudent(formData);
+        else {
+          const _terms: IStudentFormTerms[] = [];
+          Object.entries(terms).map(([k, v]) => {
+            if (v?.checked)
+              _terms.push({
+                id: +k,
+                amount: +v.amount || 0,
+                updateWallet: v.updateWallet,
+              });
+          });
+          await _createStudent(formData, {
+            entranceForm,
+            terms: _terms,
+          });
+          toast(t("success"), {
+            action: {
+              label: t("go-back"),
+              onClick: () => router.push(termLink(params, "students")),
+            },
+          });
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error(t("student-exists"));
       }
       // closeModal();
     });
