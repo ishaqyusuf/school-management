@@ -1,15 +1,11 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import BaseSheet from "./base-sheet";
-import { IStudent, StudentForm } from "@/types/types";
-import AutoComplete from "../shared/auto-complete";
-import Btn from "../shared/btn";
+import { IStudent } from "@/types/types";
+
 import { useState, useTransition } from "react";
 import { _createStudent, _updateStudent } from "@/app/_action/_student";
-import { ClassRoom } from "@prisma/client";
-import { useParams } from "next/navigation";
-import { closeModal, openModal } from "@/lib/modal";
+import { openModal } from "@/lib/modal";
 import { Button } from "../ui/button";
 import { cn, labelValue } from "@/lib/utils";
 import { useTranslation } from "@/app/i18n/client";
@@ -22,7 +18,13 @@ export default function StudentOptionSheet({ lng }) {
   function init(data?: IStudent) {
     if (data) {
       setActions([
-        labelValue(t("edit-details"), (data) => {}, {}),
+        labelValue(
+          t("edit-details"),
+          (data) => {
+            openModal("studentForm", data);
+          },
+          {}
+        ),
         // labelValue(t("change-class")),
         labelValue(t("remove-from-class"), (data) => {}, {
           disabled: data.termSheet == null,

@@ -7,6 +7,8 @@ import Header from "@/components/header";
 import StudentFilterSheet from "@/components/sheets/filters/student-filter-sheet";
 import { _getClassRooms } from "@/app/_action/_class-room";
 import { _getStudents } from "@/app/_action/_student";
+import StudentFormSheet from "@/components/sheets/student-form-sheet";
+import { prisma } from "@/db";
 export default async function StudentsPage({ searchParams, params }) {
   const students = await _getStudents(searchParams, params);
   const classRooms = await _getClassRooms(+params.sessionSlug);
@@ -23,7 +25,11 @@ export default async function StudentsPage({ searchParams, params }) {
       ),
     };
   });
-
+  const terms = await prisma.academicTerms.findMany({
+    where: {
+      academicYearId: +params.sessionSlug,
+    },
+  });
   // console.log(classRooms);
   return (
     <div className="">
@@ -47,6 +53,8 @@ export default async function StudentsPage({ searchParams, params }) {
         lng={params.lng}
         query={searchParams}
       />
+      <StudentFormSheet classRooms={classRooms} terms={terms} params={params} />
+      {/* lng={params.lng} */}
     </div>
   );
 }

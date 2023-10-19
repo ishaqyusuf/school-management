@@ -31,7 +31,17 @@ export async function _getStudents(query: IQuery, params) {
   });
   return students;
 }
-export async function _updateStudent(data: StudentForm) {}
+export async function _updateStudent(data: StudentForm) {
+  await prisma.students.update({
+    where: {
+      id: data.id,
+    },
+    data: {
+      name: data.name,
+      sex: data.sex,
+    },
+  });
+}
 export async function _createStudent(
   data: StudentForm,
   {
@@ -101,6 +111,7 @@ export async function _createStudent(
   });
   const termSheets = student.StudentTermSheets;
   const currentTerm = termSheets?.[0];
+  console.log(termSheets);
   if (currentTerm) {
     if (entranceForm?.checked) {
       await _payEntranceFee(
@@ -112,34 +123,33 @@ export async function _createStudent(
         },
         false
       );
-
-      if (terms.length) {
-        console.log(termSheets);
-        console.log(terms);
-        await _makePayment(
-          {
-            studentId: student.id,
-            payments: terms
-              .map((t) => {
-                const termSheet = termSheets.find((_t) => _t.termId == t.id);
-                if (!termSheet) return null as any;
-                return {
-                  owing: termSheet.owing,
-                  studentTermId: termSheet.id,
-                  termId: termSheet.termId,
-                  yearId: termSheet.Term.academicYearId,
-                  payment: {
-                    amount: t.amount,
-                    updateWallet: t.updateWallet,
-                    type: "school-fee",
-                  },
-                };
-              })
-              .filter(Boolean), //.filter(Boolean)
-          },
-          false
-        );
-      }
+    }
+    if (terms.length) {
+      console.log(termSheets);
+      console.log(terms);
+      await _makePayment(
+        {
+          studentId: student.id,
+          payments: terms
+            .map((t) => {
+              const termSheet = termSheets.find((_t) => _t.termId == t.id);
+              if (!termSheet) return null as any;
+              return {
+                owing: termSheet.owing,
+                studentTermId: termSheet.id,
+                termId: termSheet.termId,
+                yearId: termSheet.Term.academicYearId,
+                payment: {
+                  amount: t.amount,
+                  updateWallet: t.updateWallet,
+                  type: "school-fee",
+                },
+              };
+            })
+            .filter(Boolean), //.filter(Boolean)
+        },
+        false
+      );
     }
   }
   revalidatePath("/[sessionSlug]/[termSlug]/students", "page");

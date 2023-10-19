@@ -7,13 +7,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -25,7 +22,8 @@ export interface InputProps {
   formKey?;
   itemText?;
   itemValue?;
-  rtl?: Boolean;
+  rtl?: boolean;
+  disabled?: boolean;
 }
 export default function SelectInput({
   form,
@@ -33,6 +31,7 @@ export default function SelectInput({
   placeholder,
   formKey,
   rtl,
+  disabled,
   itemText = "label",
   itemValue = "value",
   options = [],
@@ -58,7 +57,11 @@ export default function SelectInput({
       render={({ field }) => (
         <FormItem>
           <FormLabel className={cn(rtl && "text-right")}>{label}</FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select
+            disabled={disabled}
+            onValueChange={field.onChange}
+            defaultValue={field.value}
+          >
             <FormControl>
               <SelectTrigger className="h-8 px-2">
                 <SelectValue placeholder={placeholder} />

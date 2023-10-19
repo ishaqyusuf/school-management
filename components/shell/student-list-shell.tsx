@@ -6,8 +6,8 @@ import { openModal } from "@/lib/modal";
 import { IStudent } from "@/types/types";
 import { termLink, toArabic } from "@/lib/utils";
 import Link from "next/link";
-import { useAppSelector } from "@/store";
 import { Badge } from "../ui/badge";
+import { useTranslation } from "@/app/i18n/client";
 
 interface Props {
   list: IStudent[];
@@ -15,6 +15,7 @@ interface Props {
 }
 export default function StudentListShell({ list, params }: Props) {
   // const _params = useAppSelector((s) => s.slicers?.params);
+  const { t } = useTranslation(params.lng);
   return (
     <div className="pb-24">
       <ul>
@@ -47,9 +48,13 @@ export default function StudentListShell({ list, params }: Props) {
                     >
                       {toArabic(student.amountOwed)}
                     </Badge>
+                  ) : student.meta?.schoolFee == 0 ? (
+                    <Badge variant={"secondary"} className="text-gray-600">
+                      {t("free")}
+                    </Badge>
                   ) : (
                     <Badge variant={"secondary"} className="text-green-600">
-                      تم الدفع
+                      {t("paid")}
                     </Badge>
                   )}
                 </div>

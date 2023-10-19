@@ -43,5 +43,8 @@
   "payment": "الدفع",
   "update-wallet": "تحديث المحفظة",
   "filter": "تصفية",
-  "student-exists": ""
+  "student-exists": "اسم الطالب موجود بالفعل",
+  "edit": "تحرير",
+  "free": "مجانًا",
+  "paid": "مدفوع"
 }
