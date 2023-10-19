@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { IStudentFormTerms, StudentForm } from "@/types/types";
-import { useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import { _createStudent, _updateStudent } from "@/app/_action/_student";
 import { AcademicTerms, ClassRoom } from "@prisma/client";
 import { useParams, useRouter } from "next/navigation";
@@ -48,21 +48,24 @@ export default function StudentFormComponent({
   >({
     defaultValues: data,
   });
+  useEffect(() => {
+    if (data) form.reset(data);
+  }, [data]);
   const [saving, startTransition] = useTransition();
   const p = useParams();
   const router = useRouter();
   async function save() {
     startTransition(async () => {
-      const { terms, entranceForm, ...formData } = form.getValues();
-      console.log(terms);
-      // return;
-      formData.termId = Number(p?.termSlug);
-      formData.meta.schoolFee = Number(formData.meta.schoolFee || 0);
       try {
+        const { terms, entranceForm, ...formData } = form.getValues();
         if (formData.id) {
           await _updateStudent(formData);
           closeModal();
         } else {
+          console.log(terms);
+          // return;
+          formData.termId = Number(p?.termSlug);
+          formData.meta.schoolFee = Number(formData.meta.schoolFee || 0);
           const _terms: IStudentFormTerms[] = [];
           Object.entries(terms).map(([k, v]) => {
             if (v?.checked)
