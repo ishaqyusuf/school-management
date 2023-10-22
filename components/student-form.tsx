@@ -22,11 +22,13 @@ interface Props {
   params;
   terms: AcademicTerms[];
   data?;
+  modal?: Boolean;
 }
 export default function StudentFormComponent({
   classRooms,
   terms,
   params,
+  modal,
   data = {
     meta: {
       schoolFee: 3000,
@@ -46,11 +48,11 @@ export default function StudentFormComponent({
       };
     }
   >({
-    defaultValues: data,
+    defaultValues: data || {},
   });
   useEffect(() => {
-    if (data) form.reset(data);
-  }, [data]);
+    if (data && modal) form.reset(data);
+  }, [data, modal]);
   const [saving, startTransition] = useTransition();
   const p = useParams();
   const router = useRouter();
