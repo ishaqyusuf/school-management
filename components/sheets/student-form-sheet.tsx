@@ -18,7 +18,9 @@ export default function StudentFormSheet(props: Props) {
       side="bottom"
       modalName="studentForm"
       Title={({ data }) => <div>{t("edit-details")}</div>}
-      Content={({ data }) => <StudentFormComponent {...props} data={data} />}
+      Content={({ data }) => (
+        <StudentFormComponent modal {...props} data={data} />
+      )}
     />
   );
 }
