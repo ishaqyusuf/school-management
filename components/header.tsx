@@ -7,6 +7,15 @@ import { ChevronLeft, Filter } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ModalName } from "@/store/slicers";
 import { openModal } from "@/lib/modal";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Icons } from "./shared/icons";
+import Link from "next/link";
+import { termLink } from "@/lib/utils";
 
 interface Props {
   lng;
@@ -14,8 +23,13 @@ interface Props {
   title?;
   filter?: ModalName;
 }
-export default function Header({ lng, title, filter }: Props) {
-  const { t, i18n } = useTranslation(lng);
+export default function Header({
+  title,
+  back,
+  filter,
+  ...params
+}: Partial<Props>) {
+  const { t, i18n } = useTranslation(params.lng);
   const router = useRouter();
   return (
     <div className="relative h-12">
@@ -28,6 +42,22 @@ export default function Header({ lng, title, filter }: Props) {
         }}
       >
         <div className="">
+          {/* {back && (
+            <Button
+              onClick={() => {
+                router.back();
+              }}
+              className="p-1 h-8 w-8"
+              variant="secondary"
+              size="icon"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+          )} */}
+        </div>
+        <p className="font-bold text-lg"> {t(title)}</p>
+        <div className="flex-1"></div>
+        <div className="flex space-x-2">
           {filter && (
             <Button
               onClick={() => {
@@ -40,19 +70,24 @@ export default function Header({ lng, title, filter }: Props) {
               <Filter className="w-4 h-4" />
             </Button>
           )}
-        </div>
-        <p className="font-bold text-lg"> {t(title)}</p>
-        <div className="">
-          <Button
-            onClick={() => {
-              router.back();
-            }}
-            className="p-1 h-8 w-8"
-            variant="secondary"
-            size="icon"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Button size={"icon"} variant={"outline"}>
+                <Icons.menu />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <Link href={termLink(params, "")}>
+                <DropdownMenuItem>{t("dashboard")}</DropdownMenuItem>
+              </Link>
+              <Link href={termLink(params, "students")}>
+                <DropdownMenuItem>{t("students")}</DropdownMenuItem>
+              </Link>
+              <Link href={termLink(params, "transactions")}>
+                <DropdownMenuItem>{t("transactions")}</DropdownMenuItem>
+              </Link>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>

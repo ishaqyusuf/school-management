@@ -1,5 +1,6 @@
 import { useTranslation } from "@/app/i18n";
 import DashboardCard from "@/components/dashboard-card";
+import Header from "@/components/header";
 import { prisma } from "@/db";
 import {
   formatCurrency,
@@ -56,27 +57,32 @@ export default async function HomePage({ searchParams, params }) {
   const { t } = await useTranslation(params.lng);
 
   return (
-    <div className="p-4">
-      <div className="text-right">
-        <p className="font-bold text-3xl">{term.title}</p>
-        <p>{term.AcademicYear.title}</p>
+    <>
+      <Header {...params} title={"dashboard"} />
+      <div className="p-4">
+        <div className="text-right">
+          <p className="font-bold text-3xl">{term.title}</p>
+          <p>{term.AcademicYear.title}</p>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <DashboardCard
+            className="col-span-2"
+            link={termLink(params, "students")}
+            title={t("students")}
+            subtitle={t("registered-students")}
+            value={toArabic(term._count.StudentTermSheets)}
+          />
+          <DashboardCard
+            className="col-span-2"
+            link={termLink(params, "transactions")}
+            title={t("wallet")}
+            subtitle={t("school-account")}
+            value={toArabic(
+              formatCurrency.format(sum(wallets, "balance") || 0)
+            )}
+          />
+        </div>
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        <DashboardCard
-          className="col-span-2"
-          link={termLink(params, "students")}
-          title={t("students")}
-          subtitle={t("registered-students")}
-          value={toArabic(term._count.StudentTermSheets)}
-        />
-        <DashboardCard
-          className="col-span-2"
-          link={termLink(params, "transactions")}
-          title={t("wallet")}
-          subtitle={t("school-account")}
-          value={toArabic(formatCurrency.format(sum(wallets, "balance") || 0))}
-        />
-      </div>
-    </div>
+    </>
   );
 }

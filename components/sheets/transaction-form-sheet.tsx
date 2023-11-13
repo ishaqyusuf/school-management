@@ -94,6 +94,7 @@ export default function TransactionFormSheet({
                 options={[
                   labelValue(t("entrance-fee"), "entrance-fee"),
                   labelValue(t("school-fee"), "school-fee"),
+                  labelValue(t("salary"), "salary"),
                   labelValue(t("other-payment"), "other-payment"),
                 ]}
                 form={form}

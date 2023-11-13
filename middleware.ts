@@ -15,17 +15,18 @@ export function middleware(req) {
     req.nextUrl.pathname.indexOf("chrome") > -1
   )
     return NextResponse.next();
-  let lng; // = localStorage.getItem("lng");
+  let lng = fallbackLng; // = localStorage.getItem("lng");
 
-  if (req.cookies.has(cookieName) && !lng)
-    lng = acceptLanguage.get(req.cookies.get(cookieName).value);
-  if (!lng) lng = acceptLanguage.get(req.headers.get("Accept-Language"));
-  if (!lng) lng = fallbackLng;
+  // if (req.cookies.has(cookieName) && !lng)
+  //   lng = acceptLanguage.get(req.cookies.get(cookieName).value);
+  // if (!lng) lng = acceptLanguage.get(req.headers.get("Accept-Language"));
+  // if (!lng) lng = fallbackLng;
 
   // Redirect if lng in path is not supported
   if (
     !languages.some((loc) => req.nextUrl.pathname.startsWith(`/${loc}`)) &&
-    !req.nextUrl.pathname.startsWith("/_next")
+    !req.nextUrl.pathname.startsWith("/_next") &&
+    !req.nextUrl.pathname.startsWith(`/${lng}`)
   ) {
     return NextResponse.redirect(
       new URL(`/${lng}${req.nextUrl.pathname}`, req.url)
