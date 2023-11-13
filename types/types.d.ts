@@ -74,5 +74,5 @@ export interface IWalletTransactions
   };
 }
 export interface IQuery {
-  _classId;
+  _classId?;
 }

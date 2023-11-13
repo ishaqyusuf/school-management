@@ -10,6 +10,7 @@ import { _getStudents } from "@/app/_action/_student";
 import StudentFormSheet from "@/components/sheets/student-form-sheet";
 import { prisma } from "@/db";
 export default async function StudentsPage({ searchParams, params }) {
+  // console.log(params);
   const students = await _getStudents(searchParams, params);
   const classRooms = await _getClassRooms(+params.sessionSlug);
   let s = students.map((_s) => {

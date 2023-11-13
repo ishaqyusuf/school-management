@@ -4,7 +4,6 @@ import { prisma } from "@/db";
 import { IQuery, IStudentFormTerms, StudentForm } from "@/types/types";
 import { revalidatePath } from "next/cache";
 import { _makePayment, _payEntranceFee } from "./_payment";
-import { sum } from "@/lib/utils";
 import { Prisma } from "@prisma/client";
 import { _revalidate } from "./_revalidate";
 export async function _getStudents(query: IQuery, params) {

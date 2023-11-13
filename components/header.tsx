@@ -86,6 +86,9 @@ export default function Header({
               <Link href={termLink(params, "transactions")}>
                 <DropdownMenuItem>{t("transactions")}</DropdownMenuItem>
               </Link>
+              <Link href={termLink(params, "subjects")}>
+                <DropdownMenuItem>{t("subjects")}</DropdownMenuItem>
+              </Link>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

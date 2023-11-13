@@ -30,18 +30,19 @@ model Parents {
   meta      Json?      @db.Json
   createdAt DateTime?  @db.Timestamp(0)
   updatedAt DateTime?  @db.Timestamp(0)
-  Children  Students[]
+  children  Students[]
 }
 
 model AcademicYears {
-  id           Int                  @unique @default(autoincrement())
+  id           Int                       @unique @default(autoincrement())
   title        String // 1444/1445
-  meta         Json?                @db.Json
-  createdAt    DateTime?            @db.Timestamp(0)
-  updatedAt    DateTime?            @db.Timestamp(0)
-  Terms        AcademicTerms[]
-  ClassRooms   ClassRoom[]
-  Transactions WalletTransactions[]
+  meta         Json?                     @db.Json
+  createdAt    DateTime?                 @db.Timestamp(0)
+  updatedAt    DateTime?                 @db.Timestamp(0)
+  terms        AcademicTerms[]
+  classRooms   ClassRoom[]
+  transactions WalletTransactions[]
+  subjects     AcademicSessionSubjects[]
 }
 
 model AcademicTerms {
@@ -54,52 +55,63 @@ model AcademicTerms {
   endsAt            DateTime?            @db.Timestamp(0)
   createdAt         DateTime?            @db.Timestamp(0)
   updatedAt         DateTime?            @db.Timestamp(0)
-  AcademicYear      AcademicYears        @relation(fields: [academicYearId], references: [id])
-  StudentTermSheets StudentTermSheets[]
-  Subjects          Subjects[]
-  Results           AssessmentResults[]
-  Transactions      WalletTransactions[]
+  academicYear      AcademicYears        @relation(fields: [academicYearId], references: [id])
+  studentTermSheets StudentTermSheets[]
+  results           AssessmentResults[]
+  transactions      WalletTransactions[]
 }
 
 model ClassRoom {
-  id                Int                 @unique @default(autoincrement())
+  id                Int                       @unique @default(autoincrement())
   title             String
   academicYearsId   Int
-  meta              Json?               @db.Json
-  createdAt         DateTime?           @db.Timestamp(0)
-  updatedAt         DateTime?           @db.Timestamp(0)
+  meta              Json?                     @db.Json
+  createdAt         DateTime?                 @db.Timestamp(0)
+  updatedAt         DateTime?                 @db.Timestamp(0)
   StudentTermSheets StudentTermSheets[]
-  AcademicYear      AcademicYears       @relation(fields: [academicYearsId], references: [id])
+  AcademicYear      AcademicYears             @relation(fields: [academicYearsId], references: [id])
   Assessments       Assessments[]
-  Subjects          Subjects[]
+  sessionSubjects   AcademicSessionSubjects[]
+}
+
+model AcademicSessionSubjects {
+  id             Int            @unique @default(autoincrement())
+  academicYearId Int?
+  subjectId      Int?
+  classRoomId    Int
+  meta           Json?          @db.Json
+  createdAt      DateTime?      @db.Timestamp(0)
+  updatedAt      DateTime?      @db.Timestamp(0)
+  academicYear   AcademicYears? @relation(fields: [academicYearId], references: [id])
+  subject        Subjects?      @relation(fields: [subjectId], references: [id])
+  classRoom      ClassRoom      @relation(fields: [classRoomId], references: [id])
+  assessments    Assessments[]
 }
 
 model Subjects {
-  id              Int                 @unique @default(autoincrement())
-  academicTermsId Int
-  title           String
-  classRoomId     Int
-  meta            Json?               @db.Json
-  createdAt       DateTime?           @db.Timestamp(0)
-  updatedAt       DateTime?           @db.Timestamp(0)
-  ClassRoom       ClassRoom           @relation(fields: [classRoomId], references: [id])
-  AcademicTerm    AcademicTerms       @relation(fields: [academicTermsId], references: [id])
-  Assessments     Assessments[]
-  Results         AssessmentResults[]
+  id                Int                       @unique @default(autoincrement())
+  academicTermsId   Int
+  title             String
+  meta              Json?                     @db.Json
+  createdAt         DateTime?                 @db.Timestamp(0)
+  updatedAt         DateTime?                 @db.Timestamp(0)
+  subjectSessions   AcademicSessionSubjects[]
+  assessmentResults AssessmentResults[]
 }
 
 model Assessments {
-  id          Int                 @unique @default(autoincrement())
-  title       String //exam, test etc. 
-  classRoomId Int
-  subjectsId  Int
-  obtainable  Int
-  meta        Json?               @db.Json
-  createdAt   DateTime?           @db.Timestamp(0)
-  updatedAt   DateTime?           @db.Timestamp(0)
-  ClassRoom   ClassRoom           @relation(fields: [classRoomId], references: [id])
-  Subject     Subjects            @relation(fields: [subjectsId], references: [id])
-  Results     AssessmentResults[]
+  id               Int                      @unique @default(autoincrement())
+  title            String //exam, test etc. 
+  classRoomId      Int
+  subjectId        Int
+  obtainable       Int
+  meta             Json?                    @db.Json
+  createdAt        DateTime?                @db.Timestamp(0)
+  updatedAt        DateTime?                @db.Timestamp(0)
+  ClassRoom        ClassRoom                @relation(fields: [classRoomId], references: [id])
+  Results          AssessmentResults[]
+  sessionSubject   AcademicSessionSubjects? @relation(fields: [sessionSubjectId], references: [id])
+  sessionSubjectId Int?
 }
 
 model AssessmentResults {
