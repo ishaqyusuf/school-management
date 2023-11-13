@@ -59,7 +59,7 @@ export default function TransactionFormSheet({
   }
 
   async function init(data) {
-    console.log(data);
+    // console.log(data);
     form.reset(
       ...(data || {
         transaction: "credit",
