@@ -37,11 +37,11 @@ export default async function HomePage({ searchParams, params }) {
       id: academicTermId,
     },
     include: {
-      AcademicYear: {
+      academicYear: {
         include: {
           _count: {
             select: {
-              ClassRooms: true,
+              classRooms: true,
             },
           },
         },
@@ -70,7 +70,7 @@ export default async function HomePage({ searchParams, params }) {
             link={termLink(params, "students")}
             title={t("students")}
             subtitle={t("registered-students")}
-            value={toArabic(term._count.StudentTermSheets)}
+            value={toArabic(term._count.studentTermSheets)}
           />
           <DashboardCard
             className="col-span-2"
