@@ -29,13 +29,13 @@ export default function TransactionsListShell({ list, params }: Props) {
             <div className="flex items-center">
               <div className="">
                 <p className="font-semibold">
-                  {transaction?.StudentTermSheet?.Student?.name ||
+                  {transaction?.studentTermSheet?.Student?.name ||
                     transaction?.description}
                 </p>
 
                 <div className="flex space-x-2 items-center text-muted-foreground text-sm">
                   {<p className="">{t(transaction.type)}</p>} {"("}
-                  {transaction.AcademicTerm?.title} {")"}
+                  {transaction.academicTerm?.title} {")"}
                 </div>
               </div>
               <div className="flex-1"></div>
