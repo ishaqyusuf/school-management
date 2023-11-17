@@ -13,7 +13,7 @@ export default async function Home() {
       startedAt: "desc",
     },
     include: {
-      AcademicYear: {
+      academicYear: {
         select: {
           id: true,
         },
@@ -21,6 +21,6 @@ export default async function Home() {
     },
   });
   // console.log(term);
-  redirect(`/session/${term?.AcademicYear.id}/term/${term?.id}`);
+  redirect(`/session/${term?.academicYear.id}/term/${term?.id}`);
   return <></>;
 }

@@ -92,7 +92,7 @@ export async function _getStudentPaymentInformation(studentId) {
             select: {
               id: true,
               title: true,
-              AcademicYear: {
+              academicYear: {
                 select: {
                   id: true,
                   title: true,
@@ -131,7 +131,7 @@ export async function _getStudentPaymentInformation(studentId) {
         term: termSheet.Term.title,
         studentTermId: termSheet.id,
         termId: termSheet.termId,
-        yearId: t.Term.AcademicYear.id,
+        yearId: t.Term.academicYear.id,
       };
     }
     return null;

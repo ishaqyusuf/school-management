@@ -47,7 +47,7 @@ export async function _createClassRooms(sessionId, classes: string[]) {
       id: sessionId,
     },
     data: {
-      ClassRooms: {
+      classRooms: {
         createMany: {
           data: classes.map((title) => ({
             title,
