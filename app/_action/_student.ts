@@ -155,3 +155,23 @@ export async function _createStudent(
   }
   revalidatePath("/[sessionSlug]/[termSlug]/students", "page");
 }
+export async function _deleteStudent(studentId) {
+  await prisma.walletTransactions.deleteMany({
+    where: {
+      StudentTermSheet: {
+        studentId,
+      },
+    },
+  });
+  await prisma.studentTermSheets.deleteMany({
+    where: {
+      studentId,
+    },
+  });
+  await prisma.students.delete({
+    where: {
+      id: studentId,
+    },
+  });
+  _revalidate("students");
+}

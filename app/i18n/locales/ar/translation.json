@@ -1,6 +1,7 @@
 {
   "registered-students": "الطلاب المسجلين لهذه الفطرة",
-  "students": "طلاب",
+  "students": "الطلاب",
+  "students-by-class": "الطلاب حسب الصف",
   "edit-details": "عدل التفاصيل",
   "change-class": "غير الفصل",
   "remove-from-class": "أزل من الفصل",
@@ -49,5 +50,6 @@
   "paid": "مدفوع",
   "dashboard": "لوحة التحكم",
   "salary": "راتب المعلم",
-  "subjects": "مواد"
+  "subjects": "مواد",
+  "new-class": "فصل جديد"
 }

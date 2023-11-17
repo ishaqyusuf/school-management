@@ -83,12 +83,22 @@ export default function Header({
               <Link href={termLink(params, "students")}>
                 <DropdownMenuItem>{t("students")}</DropdownMenuItem>
               </Link>
+              <Link href={termLink(params, "students/by-class")}>
+                <DropdownMenuItem>{t("students-by-class")}</DropdownMenuItem>
+              </Link>
               <Link href={termLink(params, "transactions")}>
                 <DropdownMenuItem>{t("transactions")}</DropdownMenuItem>
               </Link>
               <Link href={termLink(params, "subjects")}>
                 <DropdownMenuItem>{t("subjects")}</DropdownMenuItem>
               </Link>
+              <DropdownMenuItem
+                onClick={() => {
+                  openModal("newClass");
+                }}
+              >
+                {t("new-class")}
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

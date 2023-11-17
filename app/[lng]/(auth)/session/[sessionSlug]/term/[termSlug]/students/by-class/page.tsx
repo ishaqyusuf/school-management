@@ -9,23 +9,13 @@ import { _getClassRooms } from "@/app/_action/_class-room";
 import { _getStudents } from "@/app/_action/_student";
 import StudentFormSheet from "@/components/sheets/student-form-sheet";
 import { prisma } from "@/db";
+import StudentListByClassShell from "@/components/shell/student-list-by-class-shell";
+import { _getStudentsByClass } from "@/app/_action/_student-by-class";
 export default async function StudentsPage({ searchParams, params }) {
   // console.log(params);
-  const students = await _getStudents(searchParams, params);
+  const students = await _getStudentsByClass(searchParams, params);
   const classRooms = await _getClassRooms(+params.sessionSlug);
-  let s = students.map((_s) => {
-    const termSheet = _s.StudentTermSheets.find(
-      (s) => s.termId == +params.termSlug
-    );
-    return {
-      ..._s,
-      termSheet,
-      amountOwed: _s.StudentTermSheets.map((s) => s.owing || 0).reduce(
-        (a, b) => a + b,
-        0
-      ),
-    };
-  });
+
   const terms = await prisma.academicTerms.findMany({
     where: {
       academicYearId: +params.sessionSlug,
@@ -34,8 +24,13 @@ export default async function StudentsPage({ searchParams, params }) {
   // console.log(classRooms);
   return (
     <div className="">
-      <Header title="students" filter="studentFilter" lng={params.lng} back />
-      <StudentListShell params={params} list={s as any} />
+      <Header
+        title="students-by-class"
+        filter="studentFilter"
+        lng={params.lng}
+        back
+      />
+      <StudentListByClassShell params={params} list={students as any} />
       {/* <StudentForm classRooms={classRooms} /> */}
       <StudentOptionSheet lng={params.lng} />
       <SetStudentClassSheet

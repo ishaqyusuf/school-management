@@ -48,7 +48,7 @@ export default async function HomePage({ searchParams, params }) {
       },
       _count: {
         select: {
-          StudentTermSheets: true,
+          studentTermSheets: true,
         },
       },
     },
@@ -62,7 +62,7 @@ export default async function HomePage({ searchParams, params }) {
       <div className="p-4">
         <div className="text-right">
           <p className="font-bold text-3xl">{term.title}</p>
-          <p>{term.AcademicYear.title}</p>
+          <p>{term.academicYear.title}</p>
         </div>
         <div className="grid grid-cols-2 gap-4">
           <DashboardCard

@@ -20,7 +20,7 @@ import { Switch } from "../ui/switch";
 import { _createTransaction } from "@/app/_action/_transaction";
 import { deepCopy } from "@/lib/deep-copy";
 
-export default function TransactionFormSheet({
+export default function NewClassFormSheet({
   lng,
   academicTermsId,
   academicYearsId,
@@ -71,7 +71,7 @@ export default function TransactionFormSheet({
   return (
     <BaseSheet<IStudent>
       side="bottom"
-      modalName="transactionForm"
+      modalName="newClass"
       onOpen={(data) => init(data)}
       // Title={({ data }) => <div>{data?.name}</div>}
       Content={({ data }) => (

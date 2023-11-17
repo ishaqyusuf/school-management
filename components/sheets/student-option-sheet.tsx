@@ -4,11 +4,16 @@ import BaseSheet from "./base-sheet";
 import { IStudent } from "@/types/types";
 
 import { useState, useTransition } from "react";
-import { _createStudent, _updateStudent } from "@/app/_action/_student";
+import {
+  _createStudent,
+  _deleteStudent,
+  _updateStudent,
+} from "@/app/_action/_student";
 import { openModal } from "@/lib/modal";
 import { Button } from "../ui/button";
 import { cn, labelValue } from "@/lib/utils";
 import { useTranslation } from "@/app/i18n/client";
+import { toast } from "sonner";
 
 export default function StudentOptionSheet({ lng }) {
   const [saving, startTransition] = useTransition();
@@ -46,7 +51,10 @@ export default function StudentOptionSheet({ lng }) {
         labelValue(t("set-class"), (data) => {
           openModal("setClass", data);
         }),
-        labelValue(t("delete-student")),
+        labelValue(t("delete-student"), async (data) => {
+          await _deleteStudent(data.id);
+          toast.success(t("success"));
+        }),
       ]);
     }
   }

@@ -41,13 +41,14 @@ export interface IStudentFormTerms {
   updateWallet;
 }
 export interface IStudentTermSheet extends Omit<StudentTermSheets, "meta"> {
-  meta: {
-    payable: number;
-  };
+  meta: IStudentTermSheetMeta;
   Transactions: WalletTransactions[];
   Term: AcademicTerms & {
-    AcademicYear: AcademicYears;
+    academicYear: AcademicYears;
   };
+}
+export interface IStudentTermSheetMeta {
+  payable: number;
 }
 export interface IOwingData {
   term;
@@ -66,13 +67,23 @@ export interface IWalletTransactions
   extends Omit<WalletTransactions, "transaction" | "type"> {
   transaction: "credit" | "debit";
   type: IPaymentType;
-  AcademicTerm: AcademicTerms & {
+  academicTerm: AcademicTerms & {
     AcademicYear: AcademicYears;
   };
-  StudentTermSheet: StudentTermSheets & {
+  studentTermSheet: StudentTermSheets & {
     Student: Students;
   };
 }
 export interface IQuery {
   _classId?;
+}
+export interface IClassRoom extends ClassRoom {
+  StudentTermSheets: StudentTermSheets &
+    {
+      Student: Omit<Students, "meta"> & {
+        meta: IStudentMeta;
+        amountOwed: number;
+        StudentTermSheets: StudentTermSheets[];
+      };
+    }[];
 }
