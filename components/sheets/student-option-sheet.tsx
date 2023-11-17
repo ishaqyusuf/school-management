@@ -9,7 +9,7 @@ import {
   _deleteStudent,
   _updateStudent,
 } from "@/app/_action/_student";
-import { openModal } from "@/lib/modal";
+import { closeModal, openModal } from "@/lib/modal";
 import { Button } from "../ui/button";
 import { cn, labelValue } from "@/lib/utils";
 import { useTranslation } from "@/app/i18n/client";
@@ -52,8 +52,10 @@ export default function StudentOptionSheet({ lng }) {
           openModal("setClass", data);
         }),
         labelValue(t("delete-student"), async (data) => {
+          console.log(data);
           await _deleteStudent(data.id);
           toast.success(t("success"));
+          closeModal();
         }),
       ]);
     }

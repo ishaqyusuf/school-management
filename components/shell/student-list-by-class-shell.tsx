@@ -20,7 +20,7 @@ export default function StudentListByClassShell({ list, params }: Props) {
     <div className="pb-24">
       {list.map((classRoom) => (
         <div key={classRoom.id}>
-          <div className="py-2 font-semibold">
+          <div className="p-2 bg-slate-100 px-4 font-semibold">
             <p>{classRoom.title}</p>
           </div>
           <ul>

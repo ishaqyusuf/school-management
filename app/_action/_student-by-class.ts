@@ -8,6 +8,14 @@ export async function _getStudentsByClass(query: IQuery, params) {
     where: {},
     include: {
       StudentTermSheets: {
+        where: {
+          termId: +params.termSlug,
+        },
+        orderBy: {
+          Student: {
+            name: "asc",
+          },
+        },
         include: {
           Student: {
             include: {
