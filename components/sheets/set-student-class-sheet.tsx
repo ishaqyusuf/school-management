@@ -3,8 +3,6 @@
 import { useForm } from "react-hook-form";
 import BaseSheet from "./base-sheet";
 import { IStudent, StudentForm } from "@/types/types";
-import AutoComplete from "../shared/auto-complete";
-import Btn from "../shared/btn";
 import { useState, useTransition } from "react";
 import { _createStudent, _updateStudent } from "@/app/_action/_student";
 import { ClassRoom } from "@prisma/client";
@@ -16,9 +14,12 @@ import { useTranslation } from "@/app/i18n/client";
 import {
   _addStudentToClass,
   _changeStudentClassroom,
+  _createClassRooms,
   _getClassRooms,
 } from "@/app/_action/_class-room";
 import { toast } from "sonner";
+import { Input } from "../ui/input";
+import { Form } from "../ui/form";
 
 export default function SetStudentClassSheet({ lng, sessionId, termId }) {
   const [saving, startTransition] = useTransition();
@@ -29,6 +30,16 @@ export default function SetStudentClassSheet({ lng, sessionId, termId }) {
   const [classrooms, setClassroom] = useState<ClassRoom[]>([]);
   async function init(data) {
     setClassroom(await _getClassRooms(sessionId));
+  }
+  async function applyNewClass(data) {
+    const newClass = form.getValues("class");
+    if (newClass) {
+      const resp = await _createClassRooms(+sessionId, [newClass]);
+      let c = resp.classRooms.find((v) => v.title == newClass);
+      if (c) {
+        applyClassRoom(data, c);
+      } else toast.error(t("error-class"));
+    }
   }
   async function applyClassRoom(data: IStudent, classRoom: ClassRoom) {
     if (data.termSheet)
@@ -43,16 +54,28 @@ export default function SetStudentClassSheet({ lng, sessionId, termId }) {
     closeModal();
     toast.success(t("success"));
   }
+  const form = useForm({
+    defaultValues: {
+      class: null,
+    },
+  });
   return (
     <BaseSheet<IStudent>
       side="bottom"
       modalName="setClass"
       onOpen={(data) => {
         init(data);
+        form.reset({
+          class: null,
+        });
       }}
       Title={({ data }) => <div>{data?.name}</div>}
       Content={({ data }) => (
         <div className="flex flex-col divide-y text-right">
+          <Form {...form}>
+            <Input {...form.register("class")} />
+            <Button onClick={() => applyNewClass(data)} />
+          </Form>
           {classrooms.map((classRoom, i) => (
             <Button
               key={i}

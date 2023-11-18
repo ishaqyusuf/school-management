@@ -41,6 +41,7 @@ export async function _addStudentToClass(studentId, classId, termId, payable) {
   });
   revalidatePath("/[lng]/[sessionSlug]/[termSlug]/students", "page");
 }
+
 export async function _createClassRooms(sessionId, classes: string[]) {
   return await prisma.academicYears.update({
     where: {
@@ -56,6 +57,9 @@ export async function _createClassRooms(sessionId, classes: string[]) {
           })),
         },
       },
+    },
+    include: {
+      classRooms: true,
     },
   });
   // await prisma.classRoom.createMany({
