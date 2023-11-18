@@ -1,4 +1,3 @@
-import StudentListShell from "@/components/shell/student-list-by-class-shell";
 import StudentOptionSheet from "@/components/sheets/student-option-sheet";
 import StudentPaymentFormSheet from "@/components/sheets/student-payment-form";
 import SetStudentClassSheet from "@/components/sheets/set-student-class-sheet";
@@ -9,9 +8,11 @@ import { _getClassRooms } from "@/app/_action/_class-room";
 import { _getStudents } from "@/app/_action/_student";
 import StudentFormSheet from "@/components/sheets/student-form-sheet";
 import { prisma } from "@/db";
+import StudentListShell from "@/components/shell/student-list-shell";
 export default async function StudentsPage({ searchParams, params }) {
   // console.log(params);
   const students = await _getStudents(searchParams, params);
+  console.log(params);
   const classRooms = await _getClassRooms(+params.sessionSlug);
   let s = students.map((_s) => {
     const termSheet = _s.StudentTermSheets.find(

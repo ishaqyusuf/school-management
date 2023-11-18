@@ -5,6 +5,7 @@ import { slugModel } from "./utils";
 import { sluggify } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 export async function _getClassRooms(sessionId) {
+  console.log(sessionId);
   const classRooms = await prisma.classRoom.findMany({
     where: {
       academicYearsId: sessionId,
