@@ -38,6 +38,9 @@ export async function _getStudentsByClass(query: IQuery, params) {
             amountOwed: ts.Student?.StudentTermSheets?.map(
               (s) => s.owing || 0
             ).reduce((a, b) => a + b, 0),
+            termSheet: c.StudentTermSheets.find(
+              (t) => t.termId == +params.termSlug
+            ),
           },
           //   amountOwed: ts.Student,
         };
