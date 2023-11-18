@@ -13,19 +13,35 @@ export async function _getClassRooms(sessionId) {
   });
   return classRooms;
 }
-export async function _changeStudentClassroom(studentTermId, classId) {
-  await prisma.studentTermSheets.update({
+export async function _changeStudentClassroom(studentId, sessionId, classId) {
+  await prisma.studentTermSheets.updateMany({
     where: {
-      id: studentTermId,
-    },
-    data: {
-      ClassRoom: {
-        connect: {
-          id: classId,
-        },
+      studentId,
+      Term: {
+        academicYearId: sessionId,
       },
     },
+    data: {
+      classId,
+      // ClassRoom: {
+      //   connect: {
+      //     id: classId,
+      //   },
+      // },
+    },
   });
+  // await prisma.studentTermSheets.update({
+  //   where: {
+  //     id: studentTermId,
+  //   },
+  //   data: {
+  //     ClassRoom: {
+  //       connect: {
+  //         id: classId,
+  //       },
+  //     },
+  //   },
+  // });
   revalidatePath("/[lng]/[sessionSlug]/[termSlug]/students", "page");
 }
 export async function _addStudentToClass(studentId, classId, termId, payable) {

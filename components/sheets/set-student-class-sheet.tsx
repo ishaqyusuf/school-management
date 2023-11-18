@@ -43,7 +43,7 @@ export default function SetStudentClassSheet({ lng, sessionId, termId }) {
   }
   async function applyClassRoom(data: IStudent, classRoom: ClassRoom) {
     if (data.termSheet)
-      await _changeStudentClassroom(data.termSheet.id, classRoom.id);
+      await _changeStudentClassroom(data.id, sessionId, classRoom.id);
     else
       await _addStudentToClass(
         data.id,
