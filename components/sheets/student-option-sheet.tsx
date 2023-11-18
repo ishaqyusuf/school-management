@@ -31,9 +31,9 @@ export default function StudentOptionSheet({ lng }) {
           {}
         ),
         // labelValue(t("change-class")),
-        labelValue(t("remove-from-class"), (data) => {}, {
-          disabled: data.termSheet == null,
-        }),
+        // labelValue(t("remove-from-class"), (data) => {}, {
+        //   disabled: data.termSheet == null,
+        // }),
         labelValue(
           t("update-payable"),
           (data) => {
