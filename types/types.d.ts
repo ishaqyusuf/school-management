@@ -1,9 +1,11 @@
 import {
+  AcademicSessionSubjects,
   AcademicTerms,
   AcademicYears,
   ClassRoom,
   StudentTermSheets,
   Students,
+  Subjects,
   WalletTransactions,
 } from "@prisma/client";
 
@@ -22,12 +24,12 @@ export interface StudentForm {
 }
 export interface PaymentForm {}
 export interface IStudentTermSheet extends StudentTermSheets {
-  Student: Students;
-  ClassRoom: ClassRoom;
+  student: Students;
+  classRoom: ClassRoom;
 }
 export interface IStudent extends Omit<Students, "meta"> {
   termSheet: StudentTermSheets & {
-    ClassRoom: ClassRoom;
+    classRoom: ClassRoom;
   };
   amountOwed;
   meta: IStudentMeta;
@@ -42,8 +44,8 @@ export interface IStudentFormTerms {
 }
 export interface IStudentTermSheet extends Omit<StudentTermSheets, "meta"> {
   meta: IStudentTermSheetMeta;
-  Transactions: WalletTransactions[];
-  Term: AcademicTerms & {
+  transactions: WalletTransactions[];
+  term: AcademicTerms & {
     academicYear: AcademicYears;
   };
 }
@@ -68,22 +70,28 @@ export interface IWalletTransactions
   transaction: "credit" | "debit";
   type: IPaymentType;
   academicTerm: AcademicTerms & {
-    AcademicYear: AcademicYears;
+    academicYear: AcademicYears;
   };
   studentTermSheet: StudentTermSheets & {
-    Student: Students;
+    student: Students;
   };
 }
+export interface ISessionSubjects
+  extends Omit<AcademicSessionSubjects, "meta"> {
+  subject: ISubject;
+}
+export interface ISubject extends Omit<Subjects, "meta"> {}
 export interface IQuery {
   _classId?;
 }
 export interface IClassRoom extends ClassRoom {
-  StudentTermSheets: StudentTermSheets &
+  studentTermSheets: StudentTermSheets &
     {
-      Student: Omit<Students, "meta"> & {
+      student: Omit<Students, "meta"> & {
         meta: IStudentMeta;
         amountOwed: number;
-        StudentTermSheets: StudentTermSheets[];
+        studentTermSheets: StudentTermSheets[];
       };
     }[];
+  sessionSubjects: ISessionSubjects[];
 }

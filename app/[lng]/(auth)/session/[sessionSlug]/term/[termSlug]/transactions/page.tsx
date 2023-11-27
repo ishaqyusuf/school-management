@@ -61,12 +61,12 @@ export default async function TransactionsPage({ searchParams, params }) {
       createdAt: "desc",
     },
     include: {
-      StudentTermSheet: {
+      studentTermSheet: {
         include: {
-          Student: true,
+          student: true,
         },
       },
-      AcademicTerm: true,
+      academicTerm: true,
     },
   });
   // console.log(classRooms);

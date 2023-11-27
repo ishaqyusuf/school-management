@@ -31,6 +31,10 @@ import {
   Pencil,
   BadgeDollarSign,
   ClipboardEdit,
+  CreditCardIcon,
+  ArrowUp01,
+  ArrowDown,
+  ArrowUp,
 } from "lucide-react";
 import Image from "next/image";
  
@@ -39,7 +43,8 @@ import Link from "next/link";
 export type Icon = LucideIcon;
 
 export const Icons = {
- 
+  credit: ArrowDown,
+  debit: ArrowUp,
   close: X,
   menu: Menu,
   spinner: Loader2,

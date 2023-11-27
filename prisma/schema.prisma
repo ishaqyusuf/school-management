@@ -70,9 +70,9 @@ model ClassRoom {
   meta              Json?                     @db.Json
   createdAt         DateTime?                 @db.Timestamp(0)
   updatedAt         DateTime?                 @db.Timestamp(0)
-  StudentTermSheets StudentTermSheets[]
-  AcademicYear      AcademicYears             @relation(fields: [academicYearsId], references: [id])
-  Assessments       Assessments[]
+  studentTermSheets StudentTermSheets[]
+  academicYear      AcademicYears             @relation(fields: [academicYearsId], references: [id])
+  assessments       Assessments[]
   sessionSubjects   AcademicSessionSubjects[]
 }
 
@@ -107,14 +107,17 @@ model Assessments {
   title            String //exam, test etc. 
   classRoomId      Int
   subjectId        Int
-  obtainable       Int
+  obtainable       Int?
+  percentage       Float
+  sessionSubjectId Int?
+  usersId          Int
   meta             Json?                    @db.Json
   createdAt        DateTime?                @db.Timestamp(0)
   updatedAt        DateTime?                @db.Timestamp(0)
   classRoom        ClassRoom                @relation(fields: [classRoomId], references: [id])
   results          AssessmentResults[]
   sessionSubject   AcademicSessionSubjects? @relation(fields: [sessionSubjectId], references: [id])
-  sessionSubjectId Int?
+  createdBy        Users                    @relation(fields: [usersId], references: [id])
 }
 
 model AssessmentResults {
@@ -160,11 +163,11 @@ model StudentTermSheets {
   createdAt    DateTime?            @db.Timestamp(0)
   updatedAt    DateTime?            @db.Timestamp(0)
   // Fees         StudentPayments[]
-  Transactions WalletTransactions[]
-  Term         AcademicTerms        @relation(fields: [termId], references: [id])
-  Student      Students             @relation(fields: [studentId], references: [id])
-  ClassRoom    ClassRoom            @relation(fields: [classId], references: [id])
-  Results      AssessmentResults[]
+  transactions WalletTransactions[]
+  term         AcademicTerms        @relation(fields: [termId], references: [id])
+  student      Students             @relation(fields: [studentId], references: [id])
+  classRoom    ClassRoom            @relation(fields: [classId], references: [id])
+  results      AssessmentResults[]
 }
 
 model Wallets {
@@ -194,21 +197,32 @@ model WalletTransactions {
   studentTermSheetsId Int?
   // studentPaymentsId   Int?
   // payment             StudentPayments?   @relation(fields: [studentPaymentsId], references: [id])
-  User                Users              @relation(fields: [userId], references: [id])
-  AcademicYear        AcademicYears      @relation(fields: [academicYearsId], references: [id])
-  AcademicTerm        AcademicTerms      @relation(fields: [academicTermsId], references: [id])
-  StudentTermSheet    StudentTermSheets? @relation(fields: [studentTermSheetsId], references: [id])
+  user                Users              @relation(fields: [userId], references: [id])
+  academicYear        AcademicYears      @relation(fields: [academicYearsId], references: [id])
+  academicTerm        AcademicTerms      @relation(fields: [academicTermsId], references: [id])
+  studentTermSheet    StudentTermSheets? @relation(fields: [studentTermSheetsId], references: [id])
+}
+
+model TeacherProfile {
+  id        Int       @unique @default(autoincrement())
+  salary    Float
+  createdAt DateTime? @db.Timestamp(0)
+  updatedAt DateTime? @db.Timestamp(0)
+  users     Users[]
 }
 
 model Users {
-  id           Int                  @unique @default(autoincrement())
-  name         String
-  role         String
-  password     String
-  meta         Json?                @db.Json
-  Transactions WalletTransactions[]
-  createdAt    DateTime?            @db.Timestamp(0)
-  updatedAt    DateTime?            @db.Timestamp(0)
+  id               Int                  @unique @default(autoincrement())
+  name             String
+  role             String
+  password         String
+  meta             Json?                @db.Json
+  transactions     WalletTransactions[]
+  teacherProfile   TeacherProfile?      @relation(fields: [teacherProfileId], references: [id])
+  createdAt        DateTime?            @db.Timestamp(0)
+  updatedAt        DateTime?            @db.Timestamp(0)
+  teacherProfileId Int?
+  assessments      Assessments[]
 }
 
 // model StudentPayments {

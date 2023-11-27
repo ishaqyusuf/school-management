@@ -24,12 +24,12 @@ export default function StudentListByClassShell({ list, params }: Props) {
             <p>{classRoom.title}</p>
           </div>
           <ul>
-            {classRoom.StudentTermSheets.map((termSheet, i) => (
+            {classRoom.studentTermSheets.map((termSheet, i) => (
               <li
                 key={i}
                 className="text-right border-b p-2"
                 onClick={() => {
-                  openModal("studentOptions", termSheet.Student);
+                  openModal("studentOptions", termSheet.student);
                 }}
               >
                 <div className="flex">
@@ -38,21 +38,21 @@ export default function StudentListByClassShell({ list, params }: Props) {
                     {"."}
                   </div>
                   <div className="flex-1">
-                    <p className="font-semibold">{termSheet.Student.name}</p>
+                    <p className="font-semibold">{termSheet.student.name}</p>
                     <div className="flex space-x-2 items-center">
                       <p className="text-muted-foreground text-sm">
                         {classRoom.title}
                       </p>
 
                       <div className="flex-1"></div>
-                      {termSheet.Student.amountOwed > 0 ? (
+                      {termSheet.student.amountOwed > 0 ? (
                         <Badge
                           className="text-red-500  font-bold"
                           variant={"secondary"}
                         >
-                          {toArabic(termSheet.Student.amountOwed)}
+                          {toArabic(termSheet.student.amountOwed)}
                         </Badge>
-                      ) : termSheet.Student.meta?.schoolFee == 0 ? (
+                      ) : termSheet.student.meta?.schoolFee == 0 ? (
                         <Badge variant={"secondary"} className="text-gray-600">
                           {t("free")}
                         </Badge>

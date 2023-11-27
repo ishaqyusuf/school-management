@@ -94,7 +94,7 @@ export default function Header({
               </Link>
               <DropdownMenuItem
                 onClick={() => {
-                  openModal("newClass");
+                  openModal("classRoomForm");
                 }}
               >
                 {t("new-class")}

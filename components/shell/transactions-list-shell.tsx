@@ -6,6 +6,7 @@ import { openModal } from "@/lib/modal";
 import { IWalletTransactions } from "@/types/types";
 import { cn, formatCurrency, toArabic } from "@/lib/utils";
 import { useTranslation } from "@/app/i18n/client";
+import { Icons } from "../shared/icons";
 
 interface Props {
   list: IWalletTransactions[];
@@ -29,7 +30,7 @@ export default function TransactionsListShell({ list, params }: Props) {
             <div className="flex items-center">
               <div className="">
                 <p className="font-semibold">
-                  {transaction?.studentTermSheet?.Student?.name ||
+                  {transaction?.studentTermSheet?.student?.name ||
                     transaction?.description}
                 </p>
 
@@ -39,8 +40,14 @@ export default function TransactionsListShell({ list, params }: Props) {
                 </div>
               </div>
               <div className="flex-1"></div>
+              <div className=""></div>
               <div>
-                <p className="font-bold text-lg">
+                <p
+                  className={cn(
+                    "font-bold text-lg",
+                    transaction.transaction == "debit" && "text-red-600"
+                  )}
+                >
                   {toArabic(formatCurrency.format(transaction.amount))}
                 </p>
                 <div

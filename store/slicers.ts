@@ -21,14 +21,16 @@ export interface ISlicer {
 }
 
 export type ModalName =
-  | "studentFilter"
-  | "studentForm"
-  | "studentOptions"
   | "applyPayment"
   | "setClass"
   | "transactionOption"
   | "updateStudentPayable"
-  | "newClass"
+  | "classRoomForm"
+  | "sessionSubjectOption"
+  | "subjectForm"
+  | "studentFilter"
+  | "studentForm"
+  | "studentOptions"
   | "transactionForm"
   | undefined;
 const initialState: ISlicer = ({

@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import BaseSheet from "./base-sheet";
-import { IStudent, IWalletTransactions } from "@/types/types";
+import { ISessionSubjects, IStudent, IWalletTransactions } from "@/types/types";
 import Btn from "../shared/btn";
 import { useTransition } from "react";
 import { _createStudent, _updateStudent } from "@/app/_action/_student";
@@ -16,16 +16,15 @@ import {
   _getStudentPaymentInformation,
   _makePayment,
 } from "@/app/_action/_payment";
-import { Switch } from "../ui/switch";
 import { _createTransaction } from "@/app/_action/_transaction";
 import { deepCopy } from "@/lib/deep-copy";
 
-export default function NewClassFormSheet({
+export default function SubjectFormSheet({
   lng,
   academicTermsId,
   academicYearsId,
 }) {
-  const form = useForm<IWalletTransactions>({
+  const form = useForm<ISessionSubjects>({
     defaultValues: {},
   });
   const [saving, startTransition] = useTransition();
@@ -71,7 +70,7 @@ export default function NewClassFormSheet({
   return (
     <BaseSheet<IStudent>
       side="bottom"
-      modalName="newClass"
+      modalName="subjectForm"
       onOpen={(data) => init(data)}
       // Title={({ data }) => <div>{data?.name}</div>}
       Content={({ data }) => (
@@ -112,16 +111,6 @@ export default function NewClassFormSheet({
                 type="number"
                 form={form}
                 formKey={"amount"}
-              />
-              <FormField
-                control={form.control}
-                name="updateWallet"
-                render={({ field }) => (
-                  <Switch
-                    checked={field.value as any}
-                    onCheckedChange={field.onChange}
-                  />
-                )}
               />
             </div>
             <div className="flex ltr:justify-end mt-4">

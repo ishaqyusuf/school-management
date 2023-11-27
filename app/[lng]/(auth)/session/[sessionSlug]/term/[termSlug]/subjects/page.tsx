@@ -1,42 +1,35 @@
 import { prisma } from "@/db";
-import SetStudentClassSheet from "@/components/sheets/set-student-class-sheet";
-
-import TransactionsListShell from "@/components/shell/transactions-list-shell";
 import Header from "@/components/header";
-import TransactionOptionSheet from "@/components/sheets/transaction-option-sheet";
-import TransactionFormSheet from "@/components/sheets/new-class";
 import { _updateWallet } from "@/app/_action/_wallet";
+import SubjectListShell from "@/components/shell/subjects-list-shell";
+import SubjectFormSheet from "@/components/sheets/subject-form-sheet";
+import SessionSubjectOption from "@/components/sheets/session-subject-option";
 export default async function SubjectsPage({ searchParams, params }) {
-  const transactions = await prisma.walletTransactions.findMany({
-    orderBy: {
-      createdAt: "desc",
+  const subjectsByClassRoom = await prisma.classRoom.findMany({
+    where: {
+      academicYearsId: +params.sessionSlug,
     },
     include: {
-      StudentTermSheet: {
+      sessionSubjects: {
         include: {
-          Student: true,
+          subject: true,
         },
       },
-      AcademicTerm: true,
     },
   });
 
   return (
     <div className="">
       <Header lng={params.lng} title="transactions" back />
-      <TransactionsListShell params={params} list={transactions as any} />
+      <SubjectListShell params={params} list={subjectsByClassRoom as any} />
 
-      <TransactionOptionSheet lng={params.lng} />
-      <SetStudentClassSheet
-        lng={params.lng}
-        termId={+params.termSlug}
-        sessionId={+params.sessionSlug}
-      />
-      <TransactionFormSheet
+      <SubjectFormSheet
         lng={params.lng}
         academicTermsId={+params.termSlug}
         academicYearsId={+params.sessionSlug}
       />
+
+      <SessionSubjectOption lng={params.lng} />
     </div>
   );
 }
