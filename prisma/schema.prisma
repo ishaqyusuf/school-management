@@ -22,6 +22,7 @@ model Students {
   StudentTermSheets StudentTermSheets[]
   Parent            Parents?            @relation(fields: [parentId], references: [id])
   Results           AssessmentResults[]
+  reportSheets      ReportSheets[]
 }
 
 model Parents {
@@ -59,6 +60,7 @@ model AcademicTerms {
   studentTermSheets StudentTermSheets[]
   results           AssessmentResults[]
   transactions      WalletTransactions[]
+  reportSheets      ReportSheets[]
 }
 
 model ClassRoom {
@@ -97,6 +99,7 @@ model Subjects {
   updatedAt         DateTime?                 @db.Timestamp(0)
   subjectSessions   AcademicSessionSubjects[]
   assessmentResults AssessmentResults[]
+  reportSheets      ReportSheets[]
 }
 
 model Assessments {
@@ -108,24 +111,42 @@ model Assessments {
   meta             Json?                    @db.Json
   createdAt        DateTime?                @db.Timestamp(0)
   updatedAt        DateTime?                @db.Timestamp(0)
-  ClassRoom        ClassRoom                @relation(fields: [classRoomId], references: [id])
-  Results          AssessmentResults[]
+  classRoom        ClassRoom                @relation(fields: [classRoomId], references: [id])
+  results          AssessmentResults[]
   sessionSubject   AcademicSessionSubjects? @relation(fields: [sessionSubjectId], references: [id])
   sessionSubjectId Int?
 }
 
 model AssessmentResults {
-  id                  Int               @unique @default(autoincrement())
-  assessmentsId       Int
-  subjectsId          Int
-  studentsId          Int
-  academicTermsId     Int
-  studentTermSheetsId Int
-  Assessment          Assessments       @relation(fields: [assessmentsId], references: [id])
-  Subject             Subjects          @relation(fields: [subjectsId], references: [id])
-  Student             Students          @relation(fields: [studentsId], references: [id])
-  AcademicTerm        AcademicTerms     @relation(fields: [academicTermsId], references: [id])
-  StudentTermSheet    StudentTermSheets @relation(fields: [studentTermSheetsId], references: [id])
+  id                 Int               @unique @default(autoincrement())
+  assessmentsId      Int
+  subjectId          Int
+  studentId          Int
+  academicTermId     Int
+  studentTermSheetId Int
+  reportSheetId      Int
+  createdAt          DateTime?         @db.Timestamp(0)
+  updatedAt          DateTime?         @db.Timestamp(0)
+  assessment         Assessments       @relation(fields: [assessmentsId], references: [id])
+  subject            Subjects          @relation(fields: [subjectId], references: [id])
+  student            Students          @relation(fields: [studentId], references: [id])
+  academicTerm       AcademicTerms     @relation(fields: [academicTermId], references: [id])
+  studentTermSheet   StudentTermSheets @relation(fields: [studentTermSheetId], references: [id])
+  reportSheet        ReportSheets?     @relation(fields: [reportSheetId], references: [id])
+}
+
+model ReportSheets {
+  id             Int                 @unique @default(autoincrement())
+  studentId      Int
+  academicTermId Int
+  subjectId      Int
+  score          Float
+  createdAt      DateTime?           @db.Timestamp(0)
+  updatedAt      DateTime?           @db.Timestamp(0)
+  subject        Subjects            @relation(fields: [subjectId], references: [id])
+  academicTerm   AcademicTerms       @relation(fields: [academicTermId], references: [id])
+  student        Students            @relation(fields: [studentId], references: [id])
+  assessments    AssessmentResults[]
 }
 
 model StudentTermSheets {

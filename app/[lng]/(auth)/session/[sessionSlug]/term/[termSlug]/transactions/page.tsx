@@ -4,8 +4,8 @@ import SetStudentClassSheet from "@/components/sheets/set-student-class-sheet";
 import TransactionsListShell from "@/components/shell/transactions-list-shell";
 import Header from "@/components/header";
 import TransactionOptionSheet from "@/components/sheets/transaction-option-sheet";
-import TransactionFormSheet from "@/components/sheets/new-class";
 import { _updateWallet } from "@/app/_action/_wallet";
+import TransactionFormSheet from "@/components/sheets/transaction-form-sheet";
 export default async function TransactionsPage({ searchParams, params }) {
   // await prisma.walletTransactions.updateMany({
   //   data: {
