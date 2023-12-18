@@ -17,7 +17,7 @@ export async function _changeStudentClassroom(studentId, sessionId, classId) {
   await prisma.studentTermSheets.updateMany({
     where: {
       studentId,
-      Term: {
+      term: {
         academicYearId: sessionId,
       },
     },

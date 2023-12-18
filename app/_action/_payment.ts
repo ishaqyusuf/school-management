@@ -22,7 +22,7 @@ export async function _payEntranceFee(
       id: termSheetId,
     },
     data: {
-      Transactions: {
+      transactions: {
         create: {
           userId: 1,
           createdAt: new Date(),
@@ -58,7 +58,7 @@ export async function _makePayment(
         },
         data: {
           owing,
-          Transactions: {
+          transactions: {
             create: {
               academicTermsId: termId,
               academicYearsId: yearId,
@@ -88,7 +88,7 @@ export async function _getStudentPaymentInformation(studentId) {
     include: {
       StudentTermSheets: {
         include: {
-          Term: {
+          term: {
             select: {
               id: true,
               title: true,
@@ -100,7 +100,7 @@ export async function _getStudentPaymentInformation(studentId) {
               },
             },
           },
-          Transactions: {
+          transactions: {
             select: {
               type: true,
               description: true,
@@ -117,7 +117,8 @@ export async function _getStudentPaymentInformation(studentId) {
   const owingHistory = student?.StudentTermSheets.map((termSheet) => {
     const t: IStudentTermSheet = termSheet as any;
     const totalPaid =
-      t.Transactions.filter((f) => f.description == "fee")
+      t.transactions
+        .filter((f) => f.description == "fee")
         .map((f) => f.amount)
         .reduce((p, c) => (p || 0) + (c || 0), 0) || 0;
     // let payable = t.meta?.payable;
@@ -128,10 +129,10 @@ export async function _getStudentPaymentInformation(studentId) {
       owing += _owing;
       return {
         owing: _owing,
-        term: termSheet.Term.title,
+        term: termSheet.term.title,
         studentTermId: termSheet.id,
         termId: termSheet.termId,
-        yearId: t.Term.academicYear.id,
+        yearId: t.term.academicYear.id,
       };
     }
     return null;
@@ -163,7 +164,7 @@ export async function _setStudentTermPayable({
           studentId,
         },
         include: {
-          Transactions: {
+          transactions: {
             where: {
               type: "school-fee",
             },
@@ -178,7 +179,7 @@ export async function _setStudentTermPayable({
         //     type: "school-fee",
         //   },
         // });
-        const paid = sum(sheet.Transactions, "amount") || 0;
+        const paid = sum(sheet.transactions, "amount") || 0;
         let owing = payable - paid;
         if (owing < 0) owing = 0;
         // console.log(owing);

@@ -54,9 +54,9 @@ export async function _getTransactions() {
       // StudentTermSheets
       // payment: {
       //   include: {
-      StudentTermSheet: {
+      studentTermSheet: {
         include: {
-          Student: true,
+          student: true,
         },
         // },
         // },

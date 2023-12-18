@@ -7,17 +7,17 @@ export async function _getStudentsByClass(query: IQuery, params) {
   const classes = await prisma.classRoom.findMany({
     where: {},
     include: {
-      StudentTermSheets: {
+      studentTermSheets: {
         where: {
           termId: +params.termSlug,
         },
         orderBy: {
-          Student: {
+          student: {
             name: "asc",
           },
         },
         include: {
-          Student: {
+          student: {
             include: {
               StudentTermSheets: true,
             },
@@ -30,21 +30,23 @@ export async function _getStudentsByClass(query: IQuery, params) {
   return classes.map((c) => {
     return {
       ...c,
-      StudentTermSheets: c.StudentTermSheets.map((ts) => {
-        return {
-          ...ts,
-          Student: {
-            ...ts.Student,
-            amountOwed: ts.Student?.StudentTermSheets?.map(
-              (s) => s.owing || 0
-            ).reduce((a, b) => a + b, 0),
-            termSheet: c.StudentTermSheets.find(
-              (t) => t.termId == +params.termSlug
-            ),
-          },
-          //   amountOwed: ts.Student,
-        };
-      }).sort((a, b) => a.Student?.amountOwed - b.Student?.amountOwed),
+      StudentTermSheets: c.studentTermSheets
+        .map((ts) => {
+          return {
+            ...ts,
+            Student: {
+              ...ts.student,
+              amountOwed: ts.student?.StudentTermSheets?.map(
+                (s) => s.owing || 0
+              ).reduce((a, b) => a + b, 0),
+              termSheet: c.studentTermSheets.find(
+                (t) => t.termId == +params.termSlug
+              ),
+            },
+            //   amountOwed: ts.Student,
+          };
+        })
+        .sort((a, b) => a.Student?.amountOwed - b.Student?.amountOwed),
     };
   });
 }
