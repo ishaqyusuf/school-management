@@ -37,7 +37,7 @@ export default function StudentListShell({ list, params }: Props) {
                 <div className="flex space-x-2 items-center">
                   {student.termSheet && (
                     <p className="text-muted-foreground text-sm">
-                      {student.termSheet?.ClassRoom?.title}
+                      {student.termSheet?.classRoom?.title}
                     </p>
                   )}
                   <div className="flex-1"></div>
