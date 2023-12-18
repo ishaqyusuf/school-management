@@ -21,7 +21,7 @@ export async function _getStudents(query: IQuery, params) {
     include: {
       StudentTermSheets: {
         include: {
-          ClassRoom: true,
+          classRoom: true,
         },
       },
     },
@@ -105,7 +105,7 @@ export async function _createStudent(
           termId: "desc",
         },
         include: {
-          Term: true,
+          term: true,
         },
       },
     },
@@ -119,7 +119,7 @@ export async function _createStudent(
         termSheets[0]?.id,
         {
           academicTermsId: currentTerm.termId,
-          academicYearsId: currentTerm.Term.academicYearId,
+          academicYearsId: currentTerm.term.academicYearId,
           updateWallet: entranceForm.updateWallet,
         },
         false
@@ -139,7 +139,7 @@ export async function _createStudent(
                 owing: termSheet.owing,
                 studentTermId: termSheet.id,
                 termId: termSheet.termId,
-                yearId: termSheet.Term.academicYearId,
+                yearId: termSheet.term.academicYearId,
                 payment: {
                   amount: t.amount,
                   updateWallet: t.updateWallet,
@@ -158,7 +158,7 @@ export async function _createStudent(
 export async function _deleteStudent(studentId) {
   await prisma.walletTransactions.deleteMany({
     where: {
-      StudentTermSheet: {
+      studentTermSheet: {
         studentId,
       },
     },

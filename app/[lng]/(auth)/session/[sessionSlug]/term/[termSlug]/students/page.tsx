@@ -9,6 +9,7 @@ import { _getStudents } from "@/app/_action/_student";
 import StudentFormSheet from "@/components/sheets/student-form-sheet";
 import { prisma } from "@/db";
 import StudentListShell from "@/components/shell/student-list-shell";
+import { IStudent } from "@/types/types";
 export default async function StudentsPage({ searchParams, params }) {
   // console.log(params);
   const students = await _getStudents(searchParams, params);
